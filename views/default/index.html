@@ -11,6 +11,81 @@
 
     <div id="vue-div" class="display:none">
         <!-- Your code goes here.  Remember to call $("#vue-div").show() once you get the data for the first time. -->
+        <div class="buttons">
+
+            <p class="prompt_text">Welcome to *appname*! Please choose from the options below.</p>
+
+            <div class="button_create">
+                <a class="btn blue" href="{{=URL('default', 'create')}}">Create Question</a>
+            </div>
+
+            <div class="button_answer">
+                <a class="btn blue" href="{{=URL('default', 'join')}}">Answer Question</a>
+            </div>
+
+        </div>
+
+        <!-- join.html -->
+        <!-- <div class="enter_roomcode">
+
+            <p class="prompt_text">Please enter the room code to proceed.</p>
+
+            <div class="join_room">
+                <a class="btn blue" href="{{=URL('default', 'question')}}">Join Room</a>
+            </div>
+
+        </div> -->
+
+        <!-- question.html -->
+        <!-- <div class="question">
+
+            <p class="prompt_text">Question:</p>
+
+            <p class="question_text">question goes here</p>
+
+            <div class="answer_a">
+                <a class="btn blue" href="{{=URL('default', 'answer_a')}}">A</a>
+            </div>
+
+            <div class="answer_b">
+                <a class="btn blue" href="{{=URL('default', 'answer_b')}}">B</a>
+            </div>
+
+            <div class="answer_c">
+                <a class="btn blue" href="{{=URL('default', 'answer_c')}}">C</a>
+            </div>
+
+            <div class="answer_d">
+                <a class="btn blue" href="{{=URL('default', 'answer_d')}}">D</a>
+            </div>
+
+            <div class="answer_e">
+                <a class="btn blue" href="{{=URL('default', 'answer_e')}}">E</a>
+            </div>
+
+        </div> -->
+
+        <!-- create.html -->
+        <!-- <div class="create_question">
+
+            <p class="prompt_text">What kind of question would you like to make?</p>
+
+            <div class="multiple_choice">
+                <a class="btn blue" href="{{=URL('default', 'multiple')}}">Multiple Choice</a>
+            </div>
+
+            <div class="elimination">
+                <a class="btn blue" href="{{=URL('default', 'elimination')}}">Elimination - Multiple Choice</a>
+            </div>
+
+            <div class="ranked">
+                <a class="btn blue" href="{{=URL('default', 'ranked')}}">Ranked Choice</a>
+            </div>
+
+        </div> -->
+
+        <!--  -->
+
     </div>
 
 </div>
