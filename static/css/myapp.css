@@ -14,8 +14,8 @@ div.button_create {
     padding: 5px;
 }
 
-div.button_answer {
-    padding: 5px;
+div.button_answer .btn {
+    font-size: 20px;
 }
 
 /* join.html */
@@ -38,7 +38,7 @@ div.question {
 
 p.question_text {
     padding-bottom: 5px;
-    font-size: 100%;
+    font-size: 250%;
     text-align: center;
 }
 
@@ -64,7 +64,10 @@ div.ranked {
 /* multiple files */
 
 p.prompt_text {
-    font-size: 150%;
+    font-size: 200%;
     text-align: center;
 }
 
+.btn {
+    font-size: 24px;
+}
