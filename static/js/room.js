@@ -241,7 +241,7 @@ function draw_bargraph(json_datastring_test){
     var x_axis = chart_main.append("g")
         .attr("class", "x-axis")
         .attr("transform", function(option, index){
-            return "translate(0, " + chart_main_height + ")";
+            return "translate(" + -0.5*chart_main_bar_padding +", " + chart_main_height + ")";
         })
         .call(x_axis_bottom_object)
         .selectAll("text")
