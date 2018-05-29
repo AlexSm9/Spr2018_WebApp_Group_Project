@@ -194,7 +194,6 @@ function draw_bargraph(json_datastring_test){
         .attr("x", function(option, index){
             var step = chart_main_bar_width*index;
             var element_centering_adjustment = -1*(0.5*(this.getBBox().width));
-            console.log(element_centering_adjustment)
             var bar_half_width = ((chart_main_bar_width-chart_main_bar_padding)*0.5);
             return step+bar_half_width+element_centering_adjustment;
         })
@@ -220,7 +219,61 @@ function draw_bargraph(json_datastring_test){
             }
             
         });
+    
+    //****X-axis attempt***
+    //https://bl.ocks.org/d3indepth/fabe4d1adbf658c0b73c74d3ea36d465
+    var x_axis_scale_ordinal = d3.scaleOrdinal()
+        .domain(CDW.options).range([50, chart_main_width])
+    var x_axis_scale_linear = d3.scaleLinear()
+        .domain([0, CDW.options.length-1]).range([0, chart_main_width]);
+    var x_axis_scale_band = d3.scaleBand()
+        .domain(CDW.options).rangeRound([0, chart_main_width]);
+    
+    var bt_axis = d3.axisBottom(x_axis_scale_band)
+        .tickValues(CDW.options)
+        .tickFormat(function(option){
+            return option.text;
+        });
+    
+    
+//    var bottom_axis = d3.axisBottom(x_axis_scale_object)
+//        .tickValues(CDW.options)
+//        .tickFormat(function(option){
+//            console.log("Formatting option", option);
+//            return option.text;
+//        });
+    
+    var x_axis = chart_main.append("g")
+        .attr("class", "x-axis")
+        //.attr("transform", "translate(0," + 0 + ")")
+        .attr("transform", function(option, index){
+            return "translate(" + index*50 + ", 0)"
+        })
+        .call(bt_axis)
+        .selectAll("text")
+//            .attr("x", function(option, index){
+//                console.log(option, index)
+//                return index*20;
+//            })
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", "rotate(-65)");
         
+//    d3.select("#x-axis")
+//        .selectAll("text")
+//        .data(CDW.options)
+//        .enter()
+//        .append("text")
+//        .attr("x", function(option, index){
+//            val = x_axis_scale_linear(index)
+//        console.log("x-offset", val)
+//            return val;
+//        })
+//        .text(function(option){
+//            return option.text;
+//        });
+//        
     
     
 //    var random_circle = chart_main.append("circle")
