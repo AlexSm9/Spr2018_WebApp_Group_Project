@@ -10,9 +10,10 @@ var MIN_CHART_WIDTH = 100;
 var CHART_WIDTH_AS_PERCENTAGE_OF_WINDOW = 0.7;
 var CHART_HEIGHT_AS_PERCENTAGE_OF_WINDOW = 0.4;
 
+var OPTION_LABEL_TEXT_LENGTH_LIMIT = 20;
 
 //Testing purposes only
-var JSON_TEST_STRING = '{"Question":"What movie night theme should we have?","UUID":"956e9692-5d5f-4cbc-a9a9-0d4ec7cbd4f7","Choices":[{"text":"Vampires","option_id":1,"results":{"count":16}},{"text":"Zombies_956e9692-5d5f-4cbc-a9a9-0d4ec7cbd4f7","option_id":2,"results":{"count":15}},{"text":"Werewolves","option_id":3,"results":{"count":1}},{"text":"Cowboys","option_id":4,"results":{"count":26}}],"Settings":{"randomize_choice_order":true,"time_to_answer_seconds":80},"Meta":{"creation_UNIX_timestamp":1527028876,"reponse_count":27}}';
+var JSON_TEST_STRING = '{"Question":"What movie night theme should we have?","UUID":"956e9692-5d5f-4cbc-a9a9-0d4ec7cbd4f7","Choices":[{"text":"Vampires","option_id":1,"results":{"count":16}},{"text":"Zombies and other Undead","option_id":2,"results":{"count":15}},{"text":"Werewolves","option_id":3,"results":{"count":1}},{"text":"Cowboys","option_id":4,"results":{"count":26}}],"Settings":{"randomize_choice_order":true,"time_to_answer_seconds":80},"Meta":{"creation_UNIX_timestamp":1527028876,"reponse_count":27}}';
 
 //---------------------------
 
@@ -42,10 +43,15 @@ ChartDataWrapper.prototype.get_option_result_count_array = function(){
     }
     return result_count_array;
 };
-ChartDataWrapper.prototype.get_option_text_array = function(){
+ChartDataWrapper.prototype.get_option_text_array = function(size_limit=-1){
     var result_text_array = [];
     for(var i = 0; i<this.options.length; i++){
-        result_text_array.push(this.options[i].text);
+        if(size_limit>=0){
+            result_text_array.push(limit_text_length(this.options[i].text, size_limit));
+
+        }else{
+            result_text_array.push(this.options[i].text);
+        }
     }
     return result_text_array;
 };
@@ -84,6 +90,17 @@ function get_bar_color_from_array_index(index){
 
 function clamp(value, max, min=0){
     return Math.max(min, Math.min(max, value));
+}
+
+function limit_text_length(string, max_length, ellipsis_limit=true){
+    if(string.length > max_length){
+        if(ellipsis_limit){
+            return string.substring(0, max_length-3) + "...";
+        }else{
+            return string.substring(0, max_length);
+        }
+    }
+    return string;
 }
 
 //+++++++++++++++++++++++++++
@@ -181,10 +198,9 @@ function draw_bargraph(json_datastring_test){
     //****X-axis attempt***
     //https://bl.ocks.org/d3indepth/fabe4d1adbf658c0b73c74d3ea36d465
     //http://bl.ocks.org/d3noob/ccdcb7673cdb3a796e13
-    //https://bl.ocks.org/mbostock/7555321
     
     var x_axis_scale_band = d3.scaleBand()
-        .domain(CDW.get_option_text_array()).range([0, chart_main_width]);
+        .domain(CDW.get_option_text_array(OPTION_LABEL_TEXT_LENGTH_LIMIT)).range([0, chart_main_width]);
     
     var x_axis_bottom_object = d3.axisBottom(x_axis_scale_band)
     
@@ -200,5 +216,8 @@ function draw_bargraph(json_datastring_test){
             .attr("dx", "-.8em")
             .attr("dy", ".15em")
             .attr("transform", "rotate(-65)")
-        
+    
+    
+    //we can do textwrapping like so:
+    //https://bl.ocks.org/mbostock/7555321
 }
