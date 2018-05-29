@@ -92,57 +92,8 @@ window.onload = function(){
     console.log("Page Reloaded");
     d3.select('p').text("Hello d3 selectors!");
     
-    //Test code mostly following tutorials here: https://scrimba.com/g/gd3js
-    
-//    testdata = [4, 5, 6, 5, 3];
-    
-//    d3.select("#chart_test1")
-//        .selectAll("p")
-//        .data(testdata)
-//        .enter()
-//        .append("p")
-//        .text(function(d){return d;});
-    
-    /*
-    var svg_width_test1 = 500, svg_height_test1 = 300;
-    var bar_width_test1 = (svg_width_test1/testdata.length), bar_padding_test1 = 5;
-    
-    var svg_test1 = d3.select("#chart_test2")
-        .attr("width", svg_width_test1)
-        .attr("height", svg_height_test1);
-    
-    var barchart_verticalscale_test1 = d3.scaleLinear()
-        .domain([0, d3.max(testdata)])
-        .range([0, svg_height_test1]);
-    
-    var barchart_test_test1 = svg_test1.selectAll("rect")
-        .data(testdata)
-        .enter()
-        .append("rect")
-        .attr("y", function(d){return svg_height_test1-barchart_verticalscale_test1(d);})
-        .attr("width", bar_width_test1-bar_padding_test1)
-        .attr("height", function(d){return barchart_verticalscale_test1(d);})
-        .attr("transform", function(d, i){
-            //Translation [x, y]
-            var translate = [bar_width_test1*i, 0];
-            return "translate(" +translate+")";
-        });
-    
-    var labels_test1 = svg_test1.selectAll("text")
-        .data(testdata)
-        .enter()
-        .append("text")
-        .text(function(d){return d;})
-        .attr("x", function(d, i){return (i*bar_width_test1-bar_padding_test1)+((bar_width_test1-bar_padding_test1)/2);})
-        .attr("y", function(d){return svg_height_test1-barchart_verticalscale_test1(d)+20;})
-        .attr("fill", "#b7baeb");
-    
-    */
-    
     draw_bargraph(JSON_TEST_STRING);
         
-
-    
 };
 
 
@@ -229,74 +180,25 @@ function draw_bargraph(json_datastring_test){
     
     //****X-axis attempt***
     //https://bl.ocks.org/d3indepth/fabe4d1adbf658c0b73c74d3ea36d465
-    var x_axis_scale_ordinal = d3.scaleOrdinal()
-        .domain(CDW.options).range([50, chart_main_width])
-    var x_axis_scale_linear = d3.scaleLinear()
-        .domain([0, CDW.options.length-1]).range([0, chart_main_width]);
+    //http://bl.ocks.org/d3noob/ccdcb7673cdb3a796e13
+    //https://bl.ocks.org/mbostock/7555321
+    
     var x_axis_scale_band = d3.scaleBand()
-        .domain(CDW.options).rangeRound([0, 200]);
-    
-    var x_axis_scale_quantize = d3.scaleQuantize()
-        .domain([0, CDW.options]).range([0, 200]);
-    
-    var bt_axis = d3.axisBottom(x_axis_scale_quantize)
-        .tickValues(CDW.options)
-        .tickFormat(function(option){
-            return option.text;
-        });
-    
-    
-    var t2_scale_band = d3.scaleBand()
         .domain(CDW.get_option_text_array()).range([0, chart_main_width]);
     
-    var t2_axis = d3.axisBottom(t2_scale_band)
-    
-    
-//    var bottom_axis = d3.axisBottom(x_axis_scale_object)
-//        .tickValues(CDW.options)
-//        .tickFormat(function(option){
-//            console.log("Formatting option", option);
-//            return option.text;
-//        });
+    var x_axis_bottom_object = d3.axisBottom(x_axis_scale_band)
     
     var x_axis = chart_main.append("g")
         .attr("class", "x-axis")
-        //.attr("transform", "translate(0," + 0 + ")")
         .attr("transform", function(option, index){
             return "translate(0, " + chart_main_height + ")";
         })
-        .call(t2_axis)
+        .call(x_axis_bottom_object)
         .selectAll("text")
             .attr("class", "chart_x-axis_labels")
-
-//            .attr("x", function(option, index){
-//                console.log(option, index)
-//                return index*20;
-//            })
             .style("text-anchor", "end")
             .attr("dx", "-.8em")
             .attr("dy", ".15em")
             .attr("transform", "rotate(-65)")
         
-//    d3.select("#x-axis")
-//        .selectAll("text")
-//        .data(CDW.options)
-//        .enter()
-//        .append("text")
-//        .attr("x", function(option, index){
-//            val = x_axis_scale_linear(index)
-//        console.log("x-offset", val)
-//            return val;
-//        })
-//        .text(function(option){
-//            return option.text;
-//        });
-//        
-    
-    
-//    var random_circle = chart_main.append("circle")
-//        .attr("cx", chart_main_width/2)
-//        .attr("cy", chart_main_height/2)
-//        .attr("r", 80)
-//        .attr("fill", "#7CE8D5");
 }
