@@ -9,8 +9,13 @@ h1{
     position: relative;
     justify-content: center;
     align-content: center;
+    padding-top: 2%;
 }
 
 #chart_main {
     display: flex;
+}
+
+#chart_main_title {
+    text-align: center;
 }
