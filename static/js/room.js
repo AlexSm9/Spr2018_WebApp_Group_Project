@@ -1,3 +1,23 @@
+//@@@Toggle Button Code
+$("#toggle_chart_viz").click(function(){
+    //http://api.jquery.com/animate/
+    $("#chart_container").animate({
+        height: "toggle"
+    }, 500, "swing" , function(){
+        //animation complete callback
+    });
+});
+
+$("#toggle_QR_viz").click(function(){
+    //http://api.jquery.com/animate/
+    $("#room_QR").animate({
+        height: "toggle"
+    }, 500, "swing" , function(){
+        //animation complete callback
+    });
+});
+
+
 //@@@QR Test Code@@@
 
 TEST_QR_VALUE = "http://www.example.com"

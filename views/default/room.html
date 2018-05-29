@@ -6,19 +6,25 @@ Web2py specific implementations.
 -->
 
 <body>
-    <h1>Hello HTML!</h1>
-    <p class="testd3">Hello D3!</p>
-    <div id="chart_test1"></div>
-<!--    <svg id="chart_test2"></svg>-->
-    
     <h2 id="chart_main_title"></h2>
-    <div class="chart_container">
-        <svg id="chart_main" style="padding-bottom:150"></svg>
+    <div class="button_container">
+        <button class="btn large togglebutton" id="toggle_chart_viz">Hide/Show Chart</button>
     </div>
-    <div id="room_QR"></div>
+    <div id="chart_container">
+        <svg id="chart_main" style="padding-bottom:150;box-sizing: content-box"></svg>
+        <!--box-sizing: content-box style is there because stupid.css wants to overwrite it with something else by default-->
+    </div>
+    <div id="room_QR" style="display:none"></div>
+    <div class="button_container">
+        <button class="btn large togglebutton" id="toggle_QR_viz">Hide/Show QR Code</button>
+    </div>
+    <div class="button_container">
+        <button class="btn large" onclick="#">Close Poll</button>
+    </div>
 </body>
 
 <!--These are for ease of testing with brackets.-->
+<link href="../../static/css/stupid.css" rel="stylesheet"/>
 <link href="../../static/css/room.css" rel="stylesheet"/>
 <script src="https://d3js.org/d3.v5.js"></script>
 <!--<script src="../../static/js/d3.v5.js"></script>-->
