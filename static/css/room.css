@@ -24,3 +24,7 @@ h1{
     font-size: 300%;
     text-align: center;
 }
+
+.chart_x-axis_labels {
+    font-size: 150%;
+}

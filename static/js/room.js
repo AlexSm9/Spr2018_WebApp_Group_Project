@@ -5,14 +5,14 @@ var COLOR_PALLATE_URL_STRING = "https://coolors.co/a23b72-67bc8b-f18f01-4f86c6-7
 var MAX_CHART_HEIGHT = 300;
 var MIN_CHART_HEIGHT = 100;
 var MAX_CHART_WIDTH = 700;
-var MIN_CHART_WIDTH = 300;
+var MIN_CHART_WIDTH = 100;
 
 var CHART_WIDTH_AS_PERCENTAGE_OF_WINDOW = 0.7;
 var CHART_HEIGHT_AS_PERCENTAGE_OF_WINDOW = 0.4;
 
 
 //Testing purposes only
-var JSON_TEST_STRING = '{"Question":"What movie night theme should we have?","UUID":"956e9692-5d5f-4cbc-a9a9-0d4ec7cbd4f7","Choices":[{"text":"Vampires","option_id":1,"results":{"count":16}},{"text":"Zombies","option_id":2,"results":{"count":15}},{"text":"Werewolves","option_id":3,"results":{"count":1}},{"text":"Cowboys","option_id":4,"results":{"count":26}}],"Settings":{"randomize_choice_order":true,"time_to_answer_seconds":80},"Meta":{"creation_UNIX_timestamp":1527028876,"reponse_count":27}}';
+var JSON_TEST_STRING = '{"Question":"What movie night theme should we have?","UUID":"956e9692-5d5f-4cbc-a9a9-0d4ec7cbd4f7","Choices":[{"text":"Vampires","option_id":1,"results":{"count":16}},{"text":"Zombies_956e9692-5d5f-4cbc-a9a9-0d4ec7cbd4f7","option_id":2,"results":{"count":15}},{"text":"Werewolves","option_id":3,"results":{"count":1}},{"text":"Cowboys","option_id":4,"results":{"count":26}}],"Settings":{"randomize_choice_order":true,"time_to_answer_seconds":80},"Meta":{"creation_UNIX_timestamp":1527028876,"reponse_count":27}}';
 
 //---------------------------
 
@@ -41,6 +41,13 @@ ChartDataWrapper.prototype.get_option_result_count_array = function(){
         result_count_array.push(this.options[i].count);
     }
     return result_count_array;
+};
+ChartDataWrapper.prototype.get_option_text_array = function(){
+    var result_text_array = [];
+    for(var i = 0; i<this.options.length; i++){
+        result_text_array.push(this.options[i].text);
+    }
+    return result_text_array;
 };
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&
@@ -227,13 +234,22 @@ function draw_bargraph(json_datastring_test){
     var x_axis_scale_linear = d3.scaleLinear()
         .domain([0, CDW.options.length-1]).range([0, chart_main_width]);
     var x_axis_scale_band = d3.scaleBand()
-        .domain(CDW.options).rangeRound([0, chart_main_width]);
+        .domain(CDW.options).rangeRound([0, 200]);
     
-    var bt_axis = d3.axisBottom(x_axis_scale_band)
+    var x_axis_scale_quantize = d3.scaleQuantize()
+        .domain([0, CDW.options]).range([0, 200]);
+    
+    var bt_axis = d3.axisBottom(x_axis_scale_quantize)
         .tickValues(CDW.options)
         .tickFormat(function(option){
             return option.text;
         });
+    
+    
+    var t2_scale_band = d3.scaleBand()
+        .domain(CDW.get_option_text_array()).range([0, chart_main_width]);
+    
+    var t2_axis = d3.axisBottom(t2_scale_band)
     
     
 //    var bottom_axis = d3.axisBottom(x_axis_scale_object)
@@ -247,10 +263,12 @@ function draw_bargraph(json_datastring_test){
         .attr("class", "x-axis")
         //.attr("transform", "translate(0," + 0 + ")")
         .attr("transform", function(option, index){
-            return "translate(" + index*50 + ", 0)"
+            return "translate(0, " + chart_main_height + ")";
         })
-        .call(bt_axis)
+        .call(t2_axis)
         .selectAll("text")
+            .attr("class", "chart_x-axis_labels")
+
 //            .attr("x", function(option, index){
 //                console.log(option, index)
 //                return index*20;
@@ -258,7 +276,7 @@ function draw_bargraph(json_datastring_test){
             .style("text-anchor", "end")
             .attr("dx", "-.8em")
             .attr("dy", ".15em")
-            .attr("transform", "rotate(-65)");
+            .attr("transform", "rotate(-65)")
         
 //    d3.select("#x-axis")
 //        .selectAll("text")
