@@ -5,14 +5,14 @@ var COLOR_PALLATE_URL_STRING = "https://coolors.co/a23b72-67bc8b-f18f01-4f86c6-7
 var MAX_CHART_HEIGHT = 300;
 var MIN_CHART_HEIGHT = 100;
 var MAX_CHART_WIDTH = 700;
-var MIN_CHART_WIDTH = 100;
+var MIN_CHART_WIDTH = 300;
 
 var CHART_WIDTH_AS_PERCENTAGE_OF_WINDOW = 0.7;
 var CHART_HEIGHT_AS_PERCENTAGE_OF_WINDOW = 0.4;
 
 
 //Testing purposes only
-var JSON_TEST_STRING = '{"Question":"What movie night theme should we have?","UUID":"956e9692-5d5f-4cbc-a9a9-0d4ec7cbd4f7","Choices":[{"text":"Vampires","option_id":1,"results":{"count":6}},{"text":"Zombies","option_id":2,"results":{"count":5}},{"text":"Werewolves","option_id":3,"results":{"count":2}},{"text":"Cowboys","option_id":4,"results":{"count":14}}],"Settings":{"randomize_choice_order":true,"time_to_answer_seconds":80},"Meta":{"creation_UNIX_timestamp":1527028876,"reponse_count":27}}';
+var JSON_TEST_STRING = '{"Question":"What movie night theme should we have?","UUID":"956e9692-5d5f-4cbc-a9a9-0d4ec7cbd4f7","Choices":[{"text":"Vampires","option_id":1,"results":{"count":16}},{"text":"Zombies","option_id":2,"results":{"count":15}},{"text":"Werewolves","option_id":3,"results":{"count":1}},{"text":"Cowboys","option_id":4,"results":{"count":26}}],"Settings":{"randomize_choice_order":true,"time_to_answer_seconds":80},"Meta":{"creation_UNIX_timestamp":1527028876,"reponse_count":27}}';
 
 //---------------------------
 
@@ -21,6 +21,7 @@ function OptionDataWrapper(json_option){
     this.text = json_option["text"];
     this.count = json_option["results"]["count"];
     this.option_id = json_option["option_id"];
+    this._stored_bar_height_in_pixels = null;
 }
 OptionDataWrapper.prototype.constructor = OptionDataWrapper;
 
@@ -160,6 +161,8 @@ function draw_bargraph(json_datastring_test){
         .attr("width", chart_main_width)
         .attr("height", chart_main_height);
     
+    var bar_pixel_heights = [];
+    
     var data_bars = chart_main.selectAll("rect")
         .data(CDW.options)
         .enter()
@@ -169,7 +172,9 @@ function draw_bargraph(json_datastring_test){
         })
         .attr("width", chart_main_bar_width-chart_main_bar_padding)
         .attr("height", function(option){
-            return chart_main_vertical_scale(option.count);
+            var bar_height = chart_main_vertical_scale(option.count)
+            option._stored_bar_height_in_pixels = bar_height;
+            return bar_height;
         })
         .attr("transform", function(option, index){
            var translate = [chart_main_bar_width*index, 0];
@@ -178,7 +183,7 @@ function draw_bargraph(json_datastring_test){
         .attr("fill", function(option, index){
               return get_bar_color_from_array_index(index);
         });
-    
+        
     var onbar_values = chart_main.selectAll("text")
         .data(CDW.options)
         .enter()
@@ -188,15 +193,33 @@ function draw_bargraph(json_datastring_test){
         })
         .attr("x", function(option, index){
             var step = chart_main_bar_width*index;
-            var bar_half_width = (chart_main_bar_width*0.5)-chart_main_bar_padding;
-            return step+bar_half_width;
+            var element_centering_adjustment = -1*(0.5*(this.getBBox().width));
+            console.log(element_centering_adjustment)
+            var bar_half_width = ((chart_main_bar_width-chart_main_bar_padding)*0.5);
+            return step+bar_half_width+element_centering_adjustment;
         })
-        .attr("y", function(option, index){
+        .attr("y", function(option){
             var element_height = this.getBBox().height;
-            
-            return chart_main_height-chart_main_vertical_scale(option.count)+element_height;
+            if(option._stored_bar_height_in_pixels < element_height){
+                //If the bar is too small to fit the entire label, push the label up instead.
+                //0.5 factor is to push label up about the same amount the other labels are down (change to 1 to see what the difference is)
+                return chart_main_height-chart_main_vertical_scale(option.count)-(0.5*element_height);
+            }else{
+                return chart_main_height-chart_main_vertical_scale(option.count)+element_height;
+            }
+
         })
-        .attr("fill", "#000000");
+        .attr("fill", function(option){
+            var element_height = this.getBBox().height;
+            if(option._stored_bar_height_in_pixels < element_height){
+                //the label is on the background
+                return "#000000"
+            }else{
+                //the label is on the bars
+                return "#FFFFFF"
+            }
+            
+        });
         
     
     

@@ -19,3 +19,8 @@ h1{
 #chart_main_title {
     text-align: center;
 }
+
+.chart_onbar_value {
+    font-size: 300%;
+    text-align: center;
+}
