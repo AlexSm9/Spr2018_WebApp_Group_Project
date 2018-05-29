@@ -179,6 +179,26 @@ function draw_bargraph(json_datastring_test){
               return get_bar_color_from_array_index(index);
         });
     
+    var onbar_values = chart_main.selectAll("text")
+        .data(CDW.options)
+        .enter()
+        .append("text").attr("class", "chart_onbar_value")
+        .text(function(option){
+            return option.count;
+        })
+        .attr("x", function(option, index){
+            var step = chart_main_bar_width*index;
+            var bar_half_width = (chart_main_bar_width*0.5)-chart_main_bar_padding;
+            return step+bar_half_width;
+        })
+        .attr("y", function(option, index){
+            var element_height = this.getBBox().height;
+            
+            return chart_main_height-chart_main_vertical_scale(option.count)+element_height;
+        })
+        .attr("fill", "#000000");
+        
+    
     
 //    var random_circle = chart_main.append("circle")
 //        .attr("cx", chart_main_width/2)
