@@ -28,3 +28,12 @@ h1{
 .chart_x-axis_labels {
     font-size: 150%;
 }
+
+#room_QR {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    justify-content: center;
+    align-content: center;
+    padding-top: 2%;
+}

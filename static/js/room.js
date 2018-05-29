@@ -1,3 +1,17 @@
+//@@@QR Test Code@@@
+
+TEST_QR_VALUE = "http://www.example.com"
+
+var QRCODE_WIDTH_AS_PERCENTAGE_OF_WINDOW = 0.4;
+var qrcode = new QRCode("room_QR", {
+    text: TEST_QR_VALUE,
+    width: QRCODE_WIDTH_AS_PERCENTAGE_OF_WINDOW*window.outerWidth,
+    height: QRCODE_WIDTH_AS_PERCENTAGE_OF_WINDOW*window.outerWidth
+});
+
+
+//@@@Barchart Code@@@
+
 //-----ADJUSTABLE VALUES-----
 
 var COLOR_PALLATE_URL_STRING = "https://coolors.co/a23b72-67bc8b-f18f01-4f86c6-744fc6"
