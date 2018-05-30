@@ -1,4 +1,5 @@
 // This is the js for the default/index.html view.
+// Write separate js for different html pages as needed. -AM
 
 var app = function() {
 
@@ -25,6 +26,8 @@ var app = function() {
 
     });
 
+    // Remove this comment when enabling our vue div in code.
+    //$("#vue-div").show();
 
     return self;
 };
