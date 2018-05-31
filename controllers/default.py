@@ -41,6 +41,9 @@ def user():
 def create():
 	return dict()
 
+def room():
+	return dict()
+
 def multiple():
 	return dict()
 

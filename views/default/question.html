@@ -1,29 +1,38 @@
 {{extend 'layout.html'}}
 
-<div class="question">
+{{block head}}
 
-    <p class="prompt_text">Question:</p>
+<script src="{{=URL('static', 'js/vue.js')}}"></script>
+<script>
+  var get_question_url = "{{=URL('api', 'get_question')}}";
+  //final version of this api call will be made with address/identifier of associated db row as argument
 
-    <p class="question_text">question goes here</p>
+  //var answer_url
+  //This call will return id of user answer to the database before user is redirected to answer page
+</script>
 
-    <div class="answer_a">
-        <a class="btn blue" href="{{=URL('default', 'answer_a')}}">A</a>
-    </div>
+{{end}}
 
-    <div class="answer_b">
-        <a class="btn blue" href="{{=URL('default', 'answer_b')}}">B</a>
-    </div>
+<!--Code for answering a question-->
+<div class="main_content">
 
-    <div class="answer_c">
-        <a class="btn blue" href="{{=URL('default', 'answer_c')}}">C</a>
-    </div>
+    <div id="vue-div" class="display:none">
+        
+        <div class="question">
 
-    <div class="answer_d">
-        <a class="btn blue" href="{{=URL('default', 'answer_d')}}">D</a>
-    </div>
+            <p class="prompt_text">Question:</p>
 
-    <div class="answer_e">
-        <a class="btn blue" href="{{=URL('default', 'answer_e')}}">E</a>
+            <p class="question_text">${question}</p>
+
+            <div v-for="ans in answers" class="answer">
+                <!-- Link will have option id, amount to imcrement comment, timestamp -->
+                <a class="btn blue" href="">${ans}</a>
+            </div>
+
+        </div>
+
     </div>
 
 </div>
+
+<script src="{{=URL('static', 'js/default_question.js')}}"></script>
