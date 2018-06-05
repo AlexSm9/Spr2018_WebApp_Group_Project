@@ -34,37 +34,68 @@ class ChartJsonStringObject:
         if len(self.choices.keys())>OPTION_COUNT_HARD_LIMIT: return None #limit to not have unreasonably many options, if we want to increase this significantly, we should also correspondingly increase the length of the option_ids since there will be more collisions as the number of avaliable options grow
         if type(option) == str: #code to handle a literal question string passed as argument
             option = self.QuestionOption(option)
-        option.generate_option_id()
+        option._generate_option_id()
         while option.option_id in self.choices.keys(): #ensures uniqueness and not overwriting existing options
-            option.generate_option_id()
+            option._generate_option_id()
         self.choices[option.option_id] = option
-        if change_count_by_value is not None: self.change_option_count(option.option_id, change_count_by_value)
+        if change_count_by_value is not None: self._change_option_count(option.option_id, change_count_by_value)
         return option.option_id
 
     def remove_choice(self, option_id, also_change_response_count=True):
         if option_id in self.choices.keys():
-            if also_change_response_count: self.change_response_count(self.choices[option_id].count)
+            if also_change_response_count: self._change_response_count(self.choices[option_id].count)
             del(self.choices[option_id])
             return True
         return False
 
     def remove_all_choices(self):
         self.choices = {}
-        self.set_response_count(0)
+        self._set_response_count(0)
 
     def reset_choice_counts(self, option_id, also_change_response_count=True):
         try:
-            if also_change_response_count: self.change_response_count(-1*self.choices[option_id].count)
-            self.choices[option_id].set_count(0)
+            if also_change_response_count: self._change_response_count(-1 * self.choices[option_id].count)
+            self.choices[option_id]._set_count(0)
         except(KeyError):
             print("Attempted to reset choice counts for option with id {0}. No option with specified id was found.".format(option_id))
 
     def reset_all_choice_counts(self, also_change_response_count=True):
         for key in self.choices.keys():
-            self.choices[key].set_count(0)
-        if also_change_response_count: self.set_response_count(0)
+            self.choices[key]._set_count(0)
+        if also_change_response_count: self._set_response_count(0)
 
-    def wrap_self_as_json_object(self):
+    def set_choices(self, choice_json):
+        self.choices = {}
+        for choice in choice_json:
+            self.choices[choice["option_id"]] = self.QuestionOption(choice)
+
+    def __str__(self):
+        return json.dumps(self._wrap_self_as_json_object())
+
+    def __deepcopy__(self, memodict={}):
+        cjso_copy = ChartJsonStringObject(self.get_json_string())
+        memodict[id(cjso_copy)] = cjso_copy
+        return cjso_copy
+
+    def get_json_string(self):
+        return json.dumps(self._wrap_self_as_json_object())
+
+    def get_json(self):
+        return self._wrap_self_as_json_object()
+
+    def get_choices_list(self):
+        return list(self.choices[key]._wrap_self_as_json_object() for key in self.choices.keys())
+
+    def increment_option_count(self, option_id, increment_amount=1, also_change_response_count=True):
+        self._change_option_count(option_id, increment_amount, also_change_response_count)
+
+    def decrement_option_count(self, option_id, decrement_amount=1, also_change_response_count=True):
+        self._change_option_count(option_id, (-1 * decrement_amount), also_change_response_count)
+
+    def get_response_count(self):
+        return self.meta["response_count"]
+
+    def _wrap_self_as_json_object(self):
         return {
             "Question": self.question,
             "UID": self.uid,
@@ -73,55 +104,26 @@ class ChartJsonStringObject:
             "Choices": self.get_choices_list()
         }
 
-    def set_choices(self, choice_json):
-        self.choices = {}
-        for choice in choice_json:
-            self.choices[choice["option_id"]] = self.QuestionOption(choice)
-
-    def __str__(self):
-        return json.dumps(self.wrap_self_as_json_object())
-
-    def __deepcopy__(self, memodict={}):
-        cjso_copy = ChartJsonStringObject(self.get_json_string())
-        memodict[id(cjso_copy)] = cjso_copy
-        return cjso_copy
-
-    def get_json_string(self):
-        return json.dumps(self.wrap_self_as_json_object())
-
-    def get_json(self):
-        return self.wrap_self_as_json_object()
-
-    def get_choices_list(self):
-        return list(self.choices[key].wrap_self_as_json_object() for key in self.choices.keys())
-
-    def increment_option_count(self, option_id, increment_amount=1, also_change_response_count=True):
-        self.change_option_count(option_id, increment_amount, also_change_response_count)
-
-    def decrement_option_count(self, option_id, decrement_amount=1, also_change_response_count=True):
-        self.change_option_count(option_id, (-1*decrement_amount), also_change_response_count)
-
-    def change_option_count(self, option_id, count_change, also_change_response_count=True):
+    def _change_option_count(self, option_id, count_change, also_change_response_count=True):
         try:
             self.choices[option_id].change_count(count_change)
-            if also_change_response_count: self.change_response_count(count_change)
+            if also_change_response_count: self._change_response_count(count_change)
         except(KeyError):
             print("Attempted to change option with id {0} by count {1}. No option with specified id was found.".format(option_id, count_change))
 
-    def set_option_count(self, option_id, new_count):
+    def _set_option_count(self, option_id, new_count):
         try:
-            self.choices[option_id].set_count(new_count)
+            self.choices[option_id]._set_count(new_count)
         except(KeyError):
             print("Attempted to set option with id {0} to count {1}. No option with specified id was found.".format(option_id, new_count))
 
-    def change_response_count(self, count_change):
+    def _change_response_count(self, count_change):
         self.meta["response_count"] += count_change
 
-    def set_response_count(self, new_count):
+    def _set_response_count(self, new_count):
         self.meta["response_count"] = new_count
 
-    def get_response_count(self):
-        return self.meta["response_count"]
+
 
     class QuestionOption:
 
@@ -145,16 +147,16 @@ class ChartJsonStringObject:
         def change_count(self, count_change):
             self.count += count_change
 
-        def generate_option_id(self, id_length=7):
-            self.option_id = str(uuid.uuid4())[:id_length] #normally truncating uuids is a bad idea, but since we chack for collisions, should be ok
-
-        def set_count(self, new_count):
-            self.count = new_count
-
         def set_text(self, new_text):
             self.text = new_text
 
-        def wrap_self_as_json_object(self):
+        def _generate_option_id(self, id_length=7):
+            self.option_id = str(uuid.uuid4())[:id_length] #normally truncating uuids is a bad idea, but since we chack for collisions, should be ok
+
+        def _set_count(self, new_count):
+            self.count = new_count
+
+        def _wrap_self_as_json_object(self):
             results = {
                 "count": self.count
             }
