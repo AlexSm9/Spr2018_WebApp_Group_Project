@@ -2,8 +2,7 @@
 Web2py specific implementations.
 {{extend 'layout.html'}}
 
-<script src="{{=URL('static', 'js/room.js')}}"></script>
--->
+<script src="{{=URL('static', 'js/room.js')}}"></script>-->
 
 <body>
     <h2 id="chart_main_title"></h2>
@@ -24,11 +23,11 @@ Web2py specific implementations.
 </body>
 
 <!--These are for ease of testing with brackets.-->
-<link href="../../static/css/stupid.css" rel="stylesheet"/>
-<link href="../../static/css/room.css" rel="stylesheet"/>
+<link href="{{=URL('static', 'css/stupid.css')}}" rel="stylesheet"/>
+<link href="{{=URL('static', 'css/room.css')}}" rel="stylesheet"/>
 <script src="https://d3js.org/d3.v5.js"></script>
 <!--<script src="../../static/js/d3.v5.js"></script>-->
-<script src="../../static/js/davidshimjs-qrcodejs-04f46c6/jquery.min.js"></script>
-<script src="../../static/js/davidshimjs-qrcodejs-04f46c6/qrcode.js"></script>
-<script src="../../static/js/chart_data_wrapper.js"></script>
-<script src="../../static/js/room.js"></script>
+<script src="{{=URL('static', 'js/davidshimjs-qrcodejs-04f46c6/jquery.min.js')}}"></script>
+<script src="{{=URL('static', 'js/davidshimjs-qrcodejs-04f46c6/qrcode.js')}}"></script>
+<script src="{{=URL('static', 'js/chart_data_wrapper.js')}}"></script>
+<script src="{{=URL('static', 'js/room.js')}}"></script>
