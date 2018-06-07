@@ -32,11 +32,12 @@ var app = function() {
     };
     
     function determine_starting_page(){
-        url_params = get_room_id_parameter(window.location.href)
-        if(url_params==null){
+        var r_id = get_room_id_parameter(window.location.href)
+        if(r_id==null){
             return "poll_create"
         }else{
-            if(is_answered_poll_id_from_localstorage()){
+            self.vue.room_id = r_id;
+            if(is_answered_poll_id_from_localstorage(r_id)){
                 return "poll_answer_confirmed";
             }else{
                 return "poll_answer";
@@ -47,10 +48,10 @@ var app = function() {
     function get_room_id_parameter(url_string){
         var pattern = /(?:\?id=)(\d*)/g;
         var match = pattern.exec(url_string);
-        return match[1];
+        return match == null? null: match[1];
     }
     
-    function is_answered_poll_id_from_localstorage(){
+    function is_answered_poll_id_from_localstorage(r_id){
         return false;
     }
     
@@ -93,7 +94,7 @@ var app = function() {
         delimiters: ['${', '}'],
         unsafeDelimiters: ['!{', '}'],
         data: {
-            roomID: null,
+            room_id: null,
             page: 'prod'
         },
         methods: {
@@ -115,6 +116,15 @@ var APP = null;
 // This will make everything accessible from the js console;
 // for instance, self.x above would be accessible as APP.x
 jQuery(function(){APP = app();});
+
+
+
+
+
+
+
+
+
 
 
 //-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//
