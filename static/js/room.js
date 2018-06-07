@@ -1,3 +1,126 @@
+//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//
+//Vue Code and page handling.
+//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//
+
+
+//&&&
+//Poll Creation Answer Object: For creating poll otpions only.
+function PollCreationAnswerObject(text){
+    this.text = text;
+}
+PollCreationAnswerObject.prototype.constructor = PollCreationAnswerObject;
+//&&&
+
+
+var app = function() {
+
+    var self = {};
+
+    Vue.config.silent = false; // show all warnings
+
+    // Extends an array
+    self.extend = function(a, b) {
+        for (var i = 0; i < b.length; i++) {
+            a.push(b[i]);
+        }
+    };
+
+    // Enumerates an array.
+    var enumerate = function(v) {
+        var k=0;
+        return v.map(function(e) {e._idx = k++;});
+    };
+    
+    function determine_starting_page(){
+        url_params = get_room_id_parameter(window.location.href)
+        if(url_params==null){
+            return "poll_create"
+        }else{
+            if(is_answered_poll_id_from_localstorage()){
+                return "poll_answer_confirmed";
+            }else{
+                return "poll_answer";
+            }
+        }
+    }
+    
+    function get_room_id_parameter(url_string){
+        var pattern = /(?:\?id=)(\d*)/g;
+        var match = pattern.exec(url_string);
+        return match[1];
+    }
+    
+    function is_answered_poll_id_from_localstorage(){
+        return false;
+    }
+    
+    self.handle_page_change = function(page_string){
+        self.vue.page = page_string;
+        if(page_string == "poll_create"){
+            //do stuff
+        } 
+        else if(page_string == "poll_admin"){
+                  
+        }
+        else if(page_string == "poll_answer"){
+                  
+        }
+        else if(page_string == "poll_answer_confirmed"){
+                  
+        }
+        else if(page_string == "admin_key_invalid"){
+                  
+        }
+        else if(page_string == "poll_closed"){
+                  
+        }
+        else if(page_string == "view_results"){
+            
+        }
+        else if(page_string == "view_results_admin"){
+            
+        }
+        else{
+            throw EvalError("Unknown page string:", page_string)
+            self.vue.page = "error_page"
+        }
+        
+    };
+
+
+    self.vue = new Vue({
+        el: "#vue-div",
+        delimiters: ['${', '}'],
+        unsafeDelimiters: ['!{', '}'],
+        data: {
+            roomID: null,
+            page: 'prod'
+        },
+        methods: {
+            some_method: self.somemethod
+        }
+
+    });
+    
+    console.log("STARTING PAGE", determine_starting_page());
+
+    $("#vue-div").show();
+    
+
+    return self;
+};
+
+var APP = null;
+
+// This will make everything accessible from the js console;
+// for instance, self.x above would be accessible as APP.x
+jQuery(function(){APP = app();});
+
+
+//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//
+//D3 Code and other functions.
+//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//
+
 //@@@Toggle Button Code
 $("#toggle_chart_viz").click(function(){
     //http://api.jquery.com/animate/
