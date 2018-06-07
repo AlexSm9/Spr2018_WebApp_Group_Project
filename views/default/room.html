@@ -4,6 +4,17 @@ Web2py specific implementations.
 
 <script src="{{=URL('static', 'js/room.js')}}"></script>-->
 
+<script>
+    var get_poll_choices_api_url = "{{=URL('api', 'get_choices')}}";
+    var send_choice_api_url = "{{=URL('api', 'send_choice')}}";
+    var undo_choice_api_url = "{{=URL('api', 'undo_choice')}}";
+    
+    var create_poll_admin_api_url = "{{=URL('api', 'create_poll')}}";
+    var get_poll_admin_api_url = "{{=URL('api', 'get_poll')}}";
+    var edit_poll_admin_api_url = "{{=URL('api', 'edit_poll')}}";
+</script>
+
+
 <body>
     <div id="vue-div">Hello Vue</div>
     <h2 id="chart_main_title"></h2>

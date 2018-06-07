@@ -34,7 +34,14 @@ var app = function() {
     function determine_starting_page(){
         var r_id = get_room_id_parameter(window.location.href)
         if(r_id==null){
-            return "poll_create"
+            var existing_id = get_active_poll_administration_id_from_cookie();
+            if(existing_id != null){
+                if(verify_admin_key_and_retrieve_data(existing_id)){
+                    //TODO: IMPLEMENT
+                    return "poll_admin";
+                }
+            }
+            return "poll_create";
         }else{
             self.vue.room_id = r_id;
             if(is_answered_poll_id_from_localstorage(r_id)){
@@ -51,7 +58,20 @@ var app = function() {
         return match == null? null: match[1];
     }
     
+    function get_active_poll_administration_id_from_cookie(){
+        //retrieve active administration id from cookie
+        //TODO: implement
+        return "";
+    }
+    
+    function verify_admin_key_and_retrieve_data(existing_id){
+        //send a post request to server asking if ID exists.
+        //TODO: IMPLEMENT
+        return false;
+    }
+    
     function is_answered_poll_id_from_localstorage(r_id){
+        //TODO: IMPLEMENT
         return false;
     }
     
@@ -85,9 +105,103 @@ var app = function() {
             throw EvalError("Unknown page string:", page_string)
             self.vue.page = "error_page"
         }
+    };
+    
+    //answerer functions
         
+    self.get_poll_choices = function(){
+        var parameters = {
+            question: " "
+        };
+        $.post(get_poll_choices_api_url,
+            parameters,
+            function(data){
+                //callback
+                console.log("IN get_poll_choices_api_url, DATA:", data);
+                self.vue.poll_answer_choices = data.choices;
+            }
+        );
+    };
+    
+    self.send_choice = function(option_id){
+        var parameters = {
+            selected_option: option_id
+        };
+        $.post(send_choice_api_url,
+            parameters,
+            function(data){
+                //callback
+                console.log("IN get_poll_choices_api_url, DATA:", data);
+                self.vue.poll_answer_choices = data.choices;
+            }
+        );
+    };
+    
+    self.undo_choice = function(){
+        var parameters = {
+            choice: " "
+        };
+        $.post(undo_choice_api_url,
+            parameters,
+            function(data){
+                //callback
+                console.log("IN get_poll_choices_api_url, DATA:", data);
+                self.vue.poll_answer_choices = data.choices;
+            }
+        );
+    };
+    
+    
+    //poll creator function
+    
+    self.create_new_poll = function(){
+        var parameters = {
+            question: self.vue.poll_create_question,
+            choices: self.vue.poll_create_choices
+        };
+        $.post(create_poll_admin_api_url,
+            parameters,
+            function(data){
+                console.log("IN create_new_poll, DATA:", data);
+                //callback
+            
+                //set these values on the callback
+                self.vue.admin_id = null;
+                self.vue.room_id = null;
+            }
+        );
+    };
+    
+    self.get_poll = function(){
+        var parameters = {
+            admin_id: self.vue.admin_id
+        };
+        $.post(get_poll_admin_api_url,
+            parameters,
+            function(data){
+                console.log("IN create_new_poll, DATA:", data);
+                //callback
+                self.vue.admin_id = null;
+            }
+        );
     };
 
+    self.edit_poll = function(){
+        var parameters = {
+            //TODO: Some edits
+            admin_id: self.vue.admin_id
+        };
+        $.post(edit_poll_admin_api_url,
+            parameters,
+            function(data){
+                console.log("IN create_new_poll, DATA:", data);
+                //callback
+                self.vue.admin_id = null;
+            }
+        );
+    };
+    
+    //end functions
 
     self.vue = new Vue({
         el: "#vue-div",
@@ -95,7 +209,11 @@ var app = function() {
         unsafeDelimiters: ['!{', '}'],
         data: {
             room_id: null,
-            page: 'prod'
+            admin_id: null,
+            page: null,
+            poll_create_choices: [],
+            poll_create_question: "",
+            poll_answer_choices: []
         },
         methods: {
             some_method: self.somemethod
