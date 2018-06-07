@@ -1,1 +1,0 @@
-README for the Spr2018_WebApp_Group_Project repository

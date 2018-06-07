@@ -2,22 +2,40 @@
 
 {{block head}}
 
+<script src="{{=URL('static', 'js/vue.js')}}"></script>
+<script>
+  //api methods go here
+</script>
+
 {{end}}
 
 <div class="main_content">
-    <!-- Your code goes here.  Remember to call $("#vue-div").show() once you get the data for the first time. -->
-    <div class="buttons">
 
-        <p class="prompt_text">Welcome to *appname*! Please choose from the options below.</p>
+  <div id="vue-div" class="display:none">
 
-        <div class="button_create">
-            <a class="btn blue" href="{{=URL('default', 'create')}}">Create Question</a>
-        </div>
-
-        <div class="button_answer">
-            <a class="btn blue" href="{{=URL('default', 'join')}}">Answer Question</a>
-        </div>
-
+    <!--default_index.js stores whether there was a cookie or not (get function)-->
+    <!--if there is a cookie, stores the value as well-->
+    <div v-if="!is_cookie">
+      <!--display question-->
+      <h4>Do you prefer A or B?</h4>
+      <!--button click -> call function in api that stores result in a cookie-->
+      <!--js function changes "is_cookie" to true-->
+      <button v-on:click="store_cookie('A')">A - Apples</button>
+      <button v-on:click="store_cookie('B')">B - Oranges</button>
+    </div>
+    <div v-if="is_cookie">
+      <p>Question: ${question}</p>
+      <p>UID: ${UID}</p>
+      <h5>Your answer is ${answer}.</h5>
+      <!--final version could make the rest of this div conditional on whether the room owner has prohibited answer changes-->
+      <p>Would you like to change it?</p>
+      <!--button click -> call function in api that deletes cookie-->
+      <!--js function changes "is_cookie" to false-->
+      <button v-on:click="delete_cookie">Change Answer</button>
     </div>
 
+  </div>
+
 </div>
+
+<script src="{{=URL('static', 'js/default_index.js')}}"></script>

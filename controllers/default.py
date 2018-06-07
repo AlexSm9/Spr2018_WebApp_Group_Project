@@ -10,15 +10,8 @@
 
 
 def index():
-    """
-    example action using the internationalization operator T and flash
-    rendered by views/default/index.html or views/generic.html
-
-    if you need a simple wiki simply replace the two lines below with:
-    return auth.wiki()
-    """
+    """This is the home page."""
     return dict()
-
 
 def user():
     """
@@ -38,20 +31,6 @@ def user():
     """
     return dict(form=auth())
 
-def create():
-	return dict()
-
-def room():
-	return dict()
-
-def multiple():
-	return dict()
-
-def join():
-	return dict()
-
-def question():
-	return dict()
 
 @cache.action()
 def download():
