@@ -18,6 +18,10 @@ div.button_answer .btn {
     font-size: 20px;
 }
 
+div.button_profile .btn {
+    font-size: 20px;
+}
+
 /* join.html */
 
 div.enter_roomcode {

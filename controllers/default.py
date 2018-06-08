@@ -53,6 +53,9 @@ def join():
 def question():
 	return dict()
 
+def myPoll():
+    return dict()
+
 @cache.action()
 def download():
     """
