@@ -24,6 +24,33 @@ var app = function() {
         })
     };
 
+    //     self.delete_poll = function(question_id) {
+    //     $.post(del_question_url,
+    //     {
+    //         question_id: question_id
+    //     },
+    //     function () {
+    //         var index = null;
+    //         for (var i = 0; i < self.vue.question.length; i++) {
+    //             if (self.vue.posts[i].id === post_id) {
+    //                 // If I set this to i, it won't work, as the if below will
+    //                 // return false for items in first position.
+    //                 index = i + 1; //just in case it's the zero'th element
+    //                 break;
+    //             }
+    //         }
+    //         if (index) {
+    //             // delete the element associated with the id
+    //             self.vue.posts.splice(index - 1, 1);
+    //             //if posts length is less that 11 has_more is false
+    //             if (self.vue.posts.length < 11) {
+    //                 self.vue.has_more = false;
+    //             }
+    //         }
+    //     }
+    //     )
+    // };
+
     // Complete as needed.
     self.vue = new Vue({
         el: "#vue-div",
@@ -31,7 +58,7 @@ var app = function() {
         unsafeDelimiters: ['!{', '}'],
         data: {
             question: null,
-            answers: []
+            answers: [],
         },
         methods: {
             //none yet

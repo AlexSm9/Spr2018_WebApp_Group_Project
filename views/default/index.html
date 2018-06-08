@@ -4,24 +4,43 @@
 
 {{end}}
 
+<div class="copyright">
+
 <div class="main_content">
     <!-- Your code goes here.  Remember to call $("#vue-div").show() once you get the data for the first time. -->
+    
     <div class="buttons">
 
-        <p class="prompt_text">Welcome to *appname*! Please choose from the options below.</p>
+        <p class="prompt_text">Start Lecture Poll</p>
 
-        <div class="button_create">
-            <a class="btn blue" href="{{=URL('default', 'create')}}">Create Question</a>
+<div style="background-image: 
+      url(https://economics.ucsc.edu/images/740x300/Main%20Entrance%20Sign_740x300.jpg); 
+       height: 300px; width: 1300px;">
+   </div>
+   <div class="container padded">
+        <div class=" half button_create compressible">
+            <a class="btn rounded large yellow pulse" href="{{=URL('default', 'create')}}" style="padding: 50px;">Create Question</a>
         </div>
 
-        <div class="button_answer">
-            <a class="btn blue" href="{{=URL('default', 'join')}}">Answer Question</a>
+        <div class="half button_answer compressible">
+            <a class="btn rounded large yellow pulse" href="{{=URL('default', 'join')}}" style="padding: 50px;">Answer Question</a>
         </div>
 
         <div class="button_profile">
             <a class="btn blue" href="{{=URL('default', 'myPoll')}}">Profile</a>
         </div>
 
+        <div class="button_error1">
+            <a class="btn blue" href="{{=URL('default', 'error1')}}">Error Page1</a>
+        </div>
+
+        <div class="button_error2">
+            <a class="btn blue" href="{{=URL('default', 'error2')}}">Error Page2</a>
+        </div>
     </div>
+
+</div>
+
+</div>
 
 </div>

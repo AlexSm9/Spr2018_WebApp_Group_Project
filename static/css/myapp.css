@@ -12,6 +12,7 @@ div.buttons {
 
 div.button_create {
     padding: 5px;
+    height: 100px;
 }
 
 div.button_answer .btn {
@@ -20,6 +21,16 @@ div.button_answer .btn {
 
 div.button_profile .btn {
     font-size: 20px;
+}
+
+div.footer {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+  background-color: $secondary;
+  color: $white;
+}
+
+div.copyright {
 }
 
 /* join.html */
@@ -68,10 +79,14 @@ div.ranked {
 /* multiple files */
 
 p.prompt_text {
-    font-size: 200%;
+    font-size: 300%;
     text-align: center;
+    font-style: oblique;
+    font-family: serif;
+    font-weight: bold;
 }
 
 .btn {
     font-size: 24px;
 }
+

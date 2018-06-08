@@ -56,6 +56,13 @@ def question():
 def myPoll():
     return dict()
 
+def error1():
+    return dict()
+
+def error2():
+    return dict()
+
+
 @cache.action()
 def download():
     """
