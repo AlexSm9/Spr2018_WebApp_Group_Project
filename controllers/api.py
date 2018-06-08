@@ -1,4 +1,6 @@
 # Here go your api methods.
+import json
+from chart_json_string_editor import ChartJsonStringObject
 
 def get_question():
 	# retrieve question code from database
@@ -11,3 +13,19 @@ def get_question():
 		question="What is your favorite Pokémon?",
 		answers=["A - Pikachu", "B - Charizard", "C - Lucario", "D - Greninja", "E - Magikarp"]
 		))
+
+def poll_choices_to_list():
+    return list(str(json.loads(item)["text"]) for item in request.vars["choices[]"])
+
+def create_poll():
+    print("Recieved Question Text:")
+    print(request.vars.question)
+    print("Recieved Choices:")
+    choices = poll_choices_to_list()
+    print(choices)
+    cjso = ChartJsonStringObject()
+    cjso.set_question(request.vars.question)
+    for choice_string in choices:
+        cjso.add_choice(choice_string)
+    print(cjso)
+    
