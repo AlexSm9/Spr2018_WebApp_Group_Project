@@ -6,6 +6,7 @@
     var undo_choice_api_url = "{{=URL('api', 'undo_choice')}}";
     
     var create_poll_admin_api_url = "{{=URL('api', 'create_poll')}}";
+    var delete_poll_admin_api_url = "{{=URL('api', 'delete_poll')}}";
     var get_poll_admin_api_url = "{{=URL('api', 'get_poll')}}";
     var edit_poll_admin_api_url = "{{=URL('api', 'edit_poll')}}";
 </script>
@@ -14,7 +15,7 @@
 <body>
     <div id="vue-div">
         <h3>Hello Vue!</h3>
-        <div v-if="page='poll_create'">
+        <div v-if="page=='poll_create'">
             <h3>Question</h3>
             <input type="text" v-model="poll_create_question">
             <h3>Choices</h3>
@@ -30,6 +31,10 @@
             <button v-on:click="create_add_choice()">Create Choice</button>
             <button v-on:click="create_poll">Create Poll</button>
         
+        </div>
+        <div v-if="page=='poll_admin'">
+            <p>Poll Admin Page</p>
+            <button v-on:click="delete_poll()">Delete newly created poll? (temporary button)</button>
         </div>
     </div>
     

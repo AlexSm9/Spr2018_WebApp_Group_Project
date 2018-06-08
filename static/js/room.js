@@ -187,9 +187,26 @@ var app = function() {
                 //callback
             
                 //set these values on the callback
+                self.vue.admin_id = data.admin_id;
+                self.vue.room_id = data.poll_id;
+                self.handle_page_change("poll_admin");
+            }
+        );
+    };
+    
+    self.delete_poll_by_current_admin_id = function(){
+        var parameters = {
+            admin_id: self.vue.admin_id
+        };
+        console.log("Parameters in delete poll:", parameters);
+        $.post(delete_poll_admin_api_url,
+            parameters,
+            function(data){
+                console.log("IN delete_poll, DATA:", data);
+                //callback
                 self.vue.admin_id = null;
                 self.vue.room_id = null;
-                self.handle_page_change("poll_admin");
+                self.handle_page_change("poll_create");
             }
         );
     };
@@ -259,7 +276,8 @@ var app = function() {
             some_method: self.somemethod,
             create_add_choice: self.add_answer_choice,
             create_remove_choice: self.remove_choice_from_choice_array,
-            create_poll: self.create_new_poll
+            create_poll: self.create_new_poll,
+            delete_poll: self.delete_poll_by_current_admin_id
         }
 
     });
