@@ -186,7 +186,6 @@ var app = function() {
                 console.log("IN create_new_poll, DATA:", data);
                 //callback
             
-                //set these values on the callback
                 self.vue.admin_id = data.admin_id;
                 self.vue.room_id = data.poll_id;
                 self.handle_page_change("poll_admin");
