@@ -1,3 +1,316 @@
+//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//
+//Vue Code and page handling.
+//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//
+
+
+//&&&
+//Poll Creation Answer Object: For creating poll otpions only.
+function PollCreationAnswerObject(text){
+    this.text = text;
+}
+PollCreationAnswerObject.prototype.constructor = PollCreationAnswerObject;
+PollCreationAnswerObject.prototype.to_JSON = function(){
+    return {
+        text: this.text
+    };
+};
+PollCreationAnswerObject.prototype.to_JSON_string = function(){
+    return JSON.stringify(this.to_JSON())
+};
+
+//&&&
+
+
+var app = function() {
+
+    var self = {};
+
+    Vue.config.silent = false; // show all warnings
+
+    //############## HELPER FUNCTIONS ###############
+    
+    // Extends an array
+    self.extend = function(a, b) {
+        for (var i = 0; i < b.length; i++) {
+            a.push(b[i]);
+        }
+    };
+
+    // Enumerates an array.
+    var enumerate = function(v) {
+        var k=0;
+        return v.map(function(e) {e._idx = k++;});
+    };
+    
+    function determine_starting_page(){
+        var r_id = get_room_id_parameter(window.location.href)
+        if(r_id==null){
+            var existing_id = get_active_poll_administration_id_from_cookie();
+            if(existing_id != null){
+                if(verify_admin_key_and_retrieve_data(existing_id)){
+                    //TODO: IMPLEMENT
+                    return "poll_admin";
+                }
+            }
+            return "poll_create";
+        }else{
+            self.vue.room_id = r_id;
+            if(is_answered_poll_id_from_localstorage(r_id)){
+                return "poll_answer_confirmed";
+            }else{
+                return "poll_answer";
+            }
+        }
+    }
+    
+    function get_room_id_parameter(url_string){
+        var pattern = /(?:\?id=)(\d*)/g;
+        var match = pattern.exec(url_string);
+        return match == null? null: match[1];
+    }
+    
+    function get_active_poll_administration_id_from_cookie(){
+        //retrieve active administration id from cookie
+        //TODO: implement
+        return "";
+    }
+    
+    function verify_admin_key_and_retrieve_data(existing_id){
+        //send a post request to server asking if ID exists.
+        //TODO: IMPLEMENT
+        return false;
+    }
+    
+    function is_answered_poll_id_from_localstorage(r_id){
+        //TODO: IMPLEMENT
+        return false;
+    }
+    
+    self.handle_page_change = function(page_string){
+        self.vue.page = page_string;
+        if(page_string == "poll_create"){
+            //do stuff
+        } 
+        else if(page_string == "poll_admin"){
+                  
+        }
+        else if(page_string == "poll_answer"){
+                  
+        }
+        else if(page_string == "poll_answer_confirmed"){
+        
+        }
+        else if(page_string == "admin_key_invalid"){
+                  
+        }
+        else if(page_string == "poll_closed"){
+                  
+        }
+        else if(page_string == "view_results"){
+            
+        }
+        else if(page_string == "view_results_admin"){
+            
+        }
+        else{
+            throw EvalError("Unknown page string:", page_string)
+            self.vue.page = "error_page"
+        }
+    };
+    
+    //############ END HELPER FUNCTIONS #############
+
+    
+    //****************** API CALLS ******************
+            
+    self.get_poll_choices = function(){
+        var parameters = {
+            question: " "
+        };
+        $.post(get_poll_choices_api_url,
+            parameters,
+            function(data){
+                //callback
+                console.log("IN get_poll_choices_api_url, DATA:", data);
+                self.vue.poll_answer_choices = data.choices;
+            }
+        );
+    };
+    
+    self.send_choice = function(option_id){
+        var parameters = {
+            selected_option: option_id
+        };
+        $.post(send_choice_api_url,
+            parameters,
+            function(data){
+                //callback
+                console.log("IN send_choice, DATA:", data);
+                self.vue.poll_answer_choices = data.choices;
+                self.handle_page_change("poll_answer_confirmed");
+            }
+        );
+    };
+    
+    self.undo_choice = function(){
+        var parameters = {
+            choice: " "
+        };
+        $.post(undo_choice_api_url,
+            parameters,
+            function(data){
+                //callback
+                console.log("IN undo_choice, DATA:", data);
+                self.vue.poll_answer_choices = data.choices;
+                self.handle_page_change("poll_answer");
+            }
+        );
+    };
+    
+    
+    //poll creator function
+    
+    self.create_new_poll = function(){
+        choices = [];
+        for(var i = 0; i<self.vue.poll_create_choices.length; i++){
+            choices.push(self.vue.poll_create_choices[i].to_JSON_string());
+        }
+        var parameters = {
+            question: self.vue.poll_create_question,
+            choices: choices
+        };
+        console.log(parameters);
+        $.post(create_poll_admin_api_url,
+            parameters,
+            function(data){
+                console.log("IN create_new_poll, DATA:", data);
+                //callback
+            
+                //set these values on the callback
+                self.vue.admin_id = data.admin_id;
+                self.vue.room_id = data.poll_id;
+                self.handle_page_change("poll_admin");
+            }
+        );
+    };
+    
+    self.delete_poll_by_current_admin_id = function(){
+        var parameters = {
+            admin_id: self.vue.admin_id
+        };
+        console.log("Parameters in delete poll:", parameters);
+        $.post(delete_poll_admin_api_url,
+            parameters,
+            function(data){
+                console.log("IN delete_poll, DATA:", data);
+                //callback
+                self.vue.admin_id = null;
+                self.vue.room_id = null;
+                self.handle_page_change("poll_create");
+            }
+        );
+    };
+    
+    self.get_poll = function(){
+        var parameters = {
+            admin_id: self.vue.admin_id
+        };
+        $.post(get_poll_admin_api_url,
+            parameters,
+            function(data){
+                console.log("IN get_poll, DATA:", data);
+                //callback
+                self.vue.poll_data_admin_data_object = new ChartDataWrapper(data.json_string);
+            }
+        );
+    };
+
+    self.edit_poll = function(){
+        var parameters = {
+            //TODO: Some edits
+            admin_id: self.vue.admin_id,
+            json_poll_string: self.vue.poll_data_admin_data_object.to_JSON_string()
+        };
+        $.post(edit_poll_admin_api_url,
+            parameters,
+            function(data){
+                console.log("IN edit_poll, DATA:", data);
+                //callback
+                self.vue.admin_id = null;
+            }
+        );
+    };
+    
+    //**************** END API CALLS ****************
+    
+    //%%%%%%%%%%%%%%% OTHER FUNCTIONS %%%%%%%%%%%%%%%
+    
+    self.add_answer_choice = function(){
+        var choice = new PollCreationAnswerObject(self.vue.choice_create_text);
+        self.vue.poll_create_choices.push(choice);
+        self.vue.choice_create_text = "";
+    }
+    
+    self.remove_choice_from_choice_array = function(index_to_remove){
+        self.vue.poll_create_choices.splice(index_to_remove, 1);
+    }
+    
+    
+    //%%%%%%%%%%%%% END OTHER FUNCTIONS %%%%%%%%%%%%%
+    
+    self.vue = new Vue({
+        el: "#vue-div",
+        delimiters: ['${', '}'],
+        unsafeDelimiters: ['!{', '}'],
+        data: {
+            room_id: null,
+            admin_id: null,
+            page: null,
+            poll_create_choices: [],
+            poll_create_question: "",
+            choice_create_text: "",
+            poll_answer_choices: [],
+            poll_data_admin_data_object: null
+        },
+        methods: {
+            some_method: self.somemethod,
+            create_add_choice: self.add_answer_choice,
+            create_remove_choice: self.remove_choice_from_choice_array,
+            create_poll: self.create_new_poll,
+            delete_poll: self.delete_poll_by_current_admin_id
+        }
+
+    });
+    
+    self.handle_page_change(determine_starting_page());
+    console.log("STARTING PAGE", self.vue.page);
+
+    $("#vue-div").show();
+    
+
+    return self;
+};
+
+var APP = null;
+
+// This will make everything accessible from the js console;
+// for instance, self.x above would be accessible as APP.x
+jQuery(function(){APP = app();});
+
+
+
+
+
+
+
+
+
+
+
+//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//
+//D3 Code and other functions.
+//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//
+
 //@@@Toggle Button Code
 $("#toggle_chart_viz").click(function(){
     //http://api.jquery.com/animate/

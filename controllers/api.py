@@ -1,4 +1,6 @@
 # Here go your api methods.
+import json
+from chart_json_string_editor import ChartJsonStringObject
 
 def get_question():
 	# retrieve question code from database
@@ -11,3 +13,55 @@ def get_question():
 		question="What is your favorite Pokémon?",
 		answers=["A - Pikachu", "B - Charizard", "C - Lucario", "D - Greninja", "E - Magikarp"]
 		))
+
+
+def get_poll_by_admin_id(admin_id):
+    return db(db.polls.admin_id == admin_id).select().first()
+
+def get_poll_by_poll_id(poll_id):
+    return db(db.polls.id == poll_id).select().first()
+
+def poll_choices_to_list():
+    return list(str(json.loads(item)["text"]) for item in request.vars["choices[]"])
+
+def create_poll():
+    print("Recieved Question Text:")
+    print(request.vars.question)
+    print("Recieved Choices:")
+    choices = poll_choices_to_list()
+    print(choices)
+    cjso = ChartJsonStringObject()
+    cjso.set_question(request.vars.question)
+    for choice_string in choices:
+        cjso.add_choice(choice_string)
+    print(cjso)
+    insert_result = db_insert_new_poll(cjso)
+    if insert_result[0] is None:
+        raise ValueError("Insert id was not properly returned.")
+    return response.json(dict(
+        poll_id = insert_result[0],
+        admin_id = insert_result[1]
+    ))
+        
+def delete_poll():
+    request_admin_id = request.vars.admin_id
+    print("DELETE POLL WITH ADMIN ID:", request_admin_id)
+    try:
+        record = get_poll_by_admin_id(request_admin_id)
+        poll_id_confirmation = record.id
+        record.delete_record()
+        return response.json(dict(
+            deleted_poll_id=poll_id_confirmation
+        ))
+    except AttributeError:
+        return response.json(dict(
+            deleted_poll_id=None
+        ))
+    
+    
+def db_insert_new_poll(cjso):
+    poll_admin_id = cjso.uid
+    date = int(cjso.meta["creation_UNIX_timestamp"])
+    print("DATE:", date, "POLL_ADMIN_ID:", poll_admin_id)
+    insert_id = db.polls.insert(creation_unix_timestamp=date, admin_id=poll_admin_id, poll_json=cjso.get_json_string())
+    return(insert_id, poll_admin_id)

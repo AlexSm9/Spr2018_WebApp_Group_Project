@@ -41,7 +41,7 @@ h1{
 
 /*https://www.w3.org/Style/Examples/007/center.en.html*/
 .btn {
-    display: block;
+/*    display: block;*/
     margin: auto;
 }
 

@@ -11,7 +11,7 @@ class ChartJsonStringObject:
             self.uid = str(uuid.uuid4())
             self.settings = {}
             self.meta = {
-                'creation_UNIX_timestamp': datetime.datetime.utcnow().timestamp(),
+                'creation_UNIX_timestamp': datetime.datetime.utcnow().strftime('%s'),
                 'response_count': 0
             }
             self.choices = {}
@@ -150,6 +150,7 @@ class ChartJsonStringObject:
         def set_text(self, new_text):
             self.text = new_text
 
+        # https://stackoverflow.com/questions/13484726/safe-enough-8-character-short-unique-random-string
         def _generate_option_id(self, id_length=7):
             self.option_id = str(uuid.uuid4())[:id_length] #normally truncating uuids is a bad idea, but since we chack for collisions, should be ok
 
