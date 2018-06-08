@@ -15,10 +15,12 @@
     <div id="vue-div">
         <h3>Hello Vue!</h3>
         <div v-if="page='poll_create'">
+            <h3>Question</h3>
+            <input type="text" v-model="poll_create_question">
+            <h3>Choices</h3>
             <div class="choices" v-for="(item, index) in poll_create_choices">
                 <div>
-                    <p>ITEM TEXT = ${item.text}</p>
-                    <p>INDEX = ${index}</p>
+                    <p>Choice: ${item.text}</p>
                     <a class="btn rounded red small" v-on:click="create_remove_choice(index)">
                         <i class="fa fa-trash fa-lg"></i>
                     </a>
@@ -26,9 +28,13 @@
             </div>
             <input type="text" v-model="choice_create_text">
             <button v-on:click="create_add_choice()">Create Choice</button>
+            <button v-on:click="create_poll">Create Poll</button>
         
         </div>
     </div>
+    
+    
+    
     <h2 id="chart_main_title"></h2>
     <div class="button_container">
         <button class="btn large togglebutton" id="toggle_chart_viz">Hide/Show Chart</button>

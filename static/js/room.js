@@ -9,6 +9,15 @@ function PollCreationAnswerObject(text){
     this.text = text;
 }
 PollCreationAnswerObject.prototype.constructor = PollCreationAnswerObject;
+PollCreationAnswerObject.prototype.to_JSON = function(){
+    return {
+        text: this.text
+    };
+};
+PollCreationAnswerObject.prototype.to_JSON_string = function(){
+    return JSON.stringify(this.to_JSON())
+};
+
 //&&&
 
 
@@ -162,10 +171,15 @@ var app = function() {
     //poll creator function
     
     self.create_new_poll = function(){
+        choices = [];
+        for(var i = 0; i<self.vue.poll_create_choices.length; i++){
+            choices.push(self.vue.poll_create_choices[i].to_JSON_string());
+        }
         var parameters = {
             question: self.vue.poll_create_question,
-            choices: self.vue.poll_create_choices
+            choices: choices
         };
+        console.log(parameters);
         $.post(create_poll_admin_api_url,
             parameters,
             function(data){
@@ -245,6 +259,7 @@ var app = function() {
             some_method: self.somemethod,
             create_add_choice: self.add_answer_choice,
             create_remove_choice: self.remove_choice_from_choice_array,
+            create_poll: self.create_new_poll
         }
 
     });
