@@ -18,6 +18,8 @@ var app = function() {
 
     Vue.config.silent = false; // show all warnings
 
+    //############## HELPER FUNCTIONS ###############
+    
     // Extends an array
     self.extend = function(a, b) {
         for (var i = 0; i < b.length; i++) {
@@ -87,7 +89,7 @@ var app = function() {
                   
         }
         else if(page_string == "poll_answer_confirmed"){
-                  
+        
         }
         else if(page_string == "admin_key_invalid"){
                   
@@ -107,8 +109,11 @@ var app = function() {
         }
     };
     
-    //answerer functions
-        
+    //############ END HELPER FUNCTIONS #############
+
+    
+    //****************** API CALLS ******************
+            
     self.get_poll_choices = function(){
         var parameters = {
             question: " "
@@ -131,8 +136,9 @@ var app = function() {
             parameters,
             function(data){
                 //callback
-                console.log("IN get_poll_choices_api_url, DATA:", data);
+                console.log("IN send_choice, DATA:", data);
                 self.vue.poll_answer_choices = data.choices;
+                self.handle_page_change("poll_answer_confirmed");
             }
         );
     };
@@ -145,8 +151,9 @@ var app = function() {
             parameters,
             function(data){
                 //callback
-                console.log("IN get_poll_choices_api_url, DATA:", data);
+                console.log("IN undo_choice, DATA:", data);
                 self.vue.poll_answer_choices = data.choices;
+                self.handle_page_change("poll_answer");
             }
         );
     };
@@ -168,6 +175,7 @@ var app = function() {
                 //set these values on the callback
                 self.vue.admin_id = null;
                 self.vue.room_id = null;
+                self.handle_page_change("poll_admin");
             }
         );
     };
@@ -179,9 +187,9 @@ var app = function() {
         $.post(get_poll_admin_api_url,
             parameters,
             function(data){
-                console.log("IN create_new_poll, DATA:", data);
+                console.log("IN get_poll, DATA:", data);
                 //callback
-                self.vue.admin_id = null;
+                self.vue.poll_data_admin_data_object = new ChartDataWrapper(data.json_string);
             }
         );
     };
@@ -189,20 +197,36 @@ var app = function() {
     self.edit_poll = function(){
         var parameters = {
             //TODO: Some edits
-            admin_id: self.vue.admin_id
+            admin_id: self.vue.admin_id,
+            json_poll_string: self.vue.poll_data_admin_data_object.to_JSON_string()
         };
         $.post(edit_poll_admin_api_url,
             parameters,
             function(data){
-                console.log("IN create_new_poll, DATA:", data);
+                console.log("IN edit_poll, DATA:", data);
                 //callback
                 self.vue.admin_id = null;
             }
         );
     };
     
-    //end functions
-
+    //**************** END API CALLS ****************
+    
+    //%%%%%%%%%%%%%%% OTHER FUNCTIONS %%%%%%%%%%%%%%%
+    
+    self.add_answer_choice = function(){
+        var choice = new PollCreationAnswerObject(self.vue.choice_create_text);
+        self.vue.poll_create_choices.push(choice);
+        self.vue.choice_create_text = "";
+    }
+    
+    self.remove_choice_from_choice_array = function(index_to_remove){
+        self.vue.poll_create_choices.splice(index_to_remove, 1);
+    }
+    
+    
+    //%%%%%%%%%%%%% END OTHER FUNCTIONS %%%%%%%%%%%%%
+    
     self.vue = new Vue({
         el: "#vue-div",
         delimiters: ['${', '}'],
@@ -213,15 +237,20 @@ var app = function() {
             page: null,
             poll_create_choices: [],
             poll_create_question: "",
-            poll_answer_choices: []
+            choice_create_text: "",
+            poll_answer_choices: [],
+            poll_data_admin_data_object: null
         },
         methods: {
-            some_method: self.somemethod
+            some_method: self.somemethod,
+            create_add_choice: self.add_answer_choice,
+            create_remove_choice: self.remove_choice_from_choice_array,
         }
 
     });
     
-    console.log("STARTING PAGE", determine_starting_page());
+    self.handle_page_change(determine_starting_page());
+    console.log("STARTING PAGE", self.vue.page);
 
     $("#vue-div").show();
     
