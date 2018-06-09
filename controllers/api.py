@@ -2,6 +2,7 @@
 import json
 from chart_json_string_editor import ChartJsonStringObject
 
+
 def get_question():
 	# retrieve question code from database
 	# vue code enabled with two fields, retrieved from database result:
@@ -15,12 +16,31 @@ def get_question():
 		))
 
 
+
+#$$AccessFunctions$$
 def get_poll_by_admin_id(admin_id):
     return db(db.polls.admin_id == admin_id).select().first()
 
 def get_poll_by_poll_id(poll_id):
     return db(db.polls.id == poll_id).select().first()
 
+def get_poll_cjso(record):
+    return ChartJsonStringObject(record.poll_json)
+
+def save_poll_cjso(record, cjso):
+    try:
+        record.poll_json = cjso.get_json_string()
+        record.update_record()
+        return response.json(dict(
+            updated_poll_id=record.id
+        ))
+    except AttributeError:
+        return response.json(dict(
+            error="record_update_failed"
+        ))
+#$$END_AccessFunctions$$
+
+#++CreatePoll++
 def poll_choices_to_list():
     return list(str(json.loads(item)["text"]) for item in request.vars["choices[]"])
 
@@ -43,6 +63,13 @@ def create_poll():
         admin_id = insert_result[1]
     ))
 
+def db_insert_new_poll(cjso):
+    poll_admin_id = cjso.uid
+    date = int(cjso.meta["creation_UNIX_timestamp"])
+    print("DATE:", date, "POLL_ADMIN_ID:", poll_admin_id)
+    insert_id = db.polls.insert(creation_unix_timestamp=date, admin_id=poll_admin_id, poll_json=cjso.get_json_string())
+    return(insert_id, poll_admin_id)
+#++END_CreatePoll++
 
 def creator_get_poll_record():
     request_admin_id = request.vars.admin_id
@@ -70,13 +97,12 @@ def delete_poll():
         ))
     except AttributeError:
         return response.json(dict(
-            deleted_poll_id=None
+            error="failed_delete_poll"
         ))
     
 def toggle_accepting_answers():
-    request_admin_id = request.vars.admin_id
-    record = get_poll_by_admin_id(request_admin_id)
     try:
+        record = creator_get_poll_record()
         record.accepting_answers = not record.accepting_answers
         record.update_record()
         print("Successfully toggled accepting_answers of poll with id:", record.id)
@@ -86,15 +112,36 @@ def toggle_accepting_answers():
         ))
     except AttributeError:
         return response.json(dict(
-            is_poll_accpeting_answers=None
+            error="failed_accepting_toggle"
         ))
     
-def db_insert_new_poll(cjso):
-    poll_admin_id = cjso.uid
-    date = int(cjso.meta["creation_UNIX_timestamp"])
-    print("DATE:", date, "POLL_ADMIN_ID:", poll_admin_id)
-    insert_id = db.polls.insert(creation_unix_timestamp=date, admin_id=poll_admin_id, poll_json=cjso.get_json_string())
-    return(insert_id, poll_admin_id)
+def get_poll():
+    try:
+        cjso = get_poll_cjso(creator_get_poll_record())
+        return response.json(dict(
+            poll_json = cjso.get_json_string()
+        ))
+    except AttributeError:
+        return response.json(dict(
+            error="failed_get_poll"
+        ))
+        
+def edit_poll():
+    record = creator_get_poll_record()
+    edited_json_string = request.vars.poll_json
+    if not edited_json_string:
+        return response.json((
+            error="no_edit_parameter"
+        ))
+    try:
+        cjso = ChartJsonStringObject(edited_json_string)
+    except:
+        return response.json((
+            error="malformed_json_string"
+        ))
+    save_poll_cjso(record, cjso)
+
+        
 
 
 
@@ -119,23 +166,12 @@ def answerer_get_poll_record():
         ))
     return record
 
-def answerer_get_poll_cjso(record):
-    cjso = ChartJsonStringObject(record.poll_json)
+
     
-def answerer_save_poll_cjso(record, cjso):
-    try:
-        record.poll_json = cjso.get_json_string()
-        record.update_record()
-        return response.json(dict(
-            updated_poll_id=record.id
-        ))
-    except AttributeError:
-        return response.json(dict(
-            error="update_failed"
-        ))
+
 
 def get_choices():
-    cjso = answerer_get_poll_cjso(answerer_get_poll_record())
+    cjso = get_poll_cjso(answerer_get_poll_record())
     return response.json(dict(
         choice=cjso.get_choices_list()
     ))
@@ -147,9 +183,9 @@ def send_choice():
             error="missing_option_id"
         ))
     record = answerer_get_poll_record()
-    cjso = answerer_get_poll_cjso(record)
+    cjso = get_poll_cjso(record)
     cjso.increment_option_count(option_id)
-    answerer_save_poll_cjso(record, cjso)
+    save_poll_cjso(record, cjso)
 
 def undo_choice():
     option_id = request.vars.option_id
@@ -158,6 +194,6 @@ def undo_choice():
             error="missing_option_id"
         ))
     record = answerer_get_poll_record()
-    cjso = answerer_get_poll_cjso(record)
+    cjso = get_poll_cjso(record)
     cjso.decrement_option_count(option_id)
-    answerer_save_poll_cjso(record, cjso)
+    save_poll_cjso(record, cjso)
