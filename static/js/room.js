@@ -147,9 +147,9 @@ var app = function() {
         );
     };
     
-    self.send_choice = function(option_id){
+    self.send_choice = function(choice){
         var parameters = {
-            option_id: option_id,
+            option_id: choice.option_id,
             poll_id: self.vue.room_id
         };
         $.post(send_choice_api_url,
@@ -158,13 +158,14 @@ var app = function() {
                 //callback
                 console.log("IN send_choice, DATA:", data);
                 self.handle_page_change("poll_answer_confirmed");
+                self.vue.chosen_poll_choice = choice;
             }
         );
     };
     
-    self.undo_choice = function(){
+    self.undo_choice = function(choice){
         var parameters = {
-            option_id: option_id,
+            option_id: choice.option_id,
             poll_id: self.vue.room_id
         };
         $.post(undo_choice_api_url,
@@ -173,6 +174,7 @@ var app = function() {
                 //callback
                 console.log("IN undo_choice, DATA:", data);
                 self.handle_page_change("poll_answer");
+                self.vue.chosen_poll_choice = null;
             }
         );
     };
@@ -290,7 +292,8 @@ var app = function() {
             poll_create_question: "",
             choice_create_text: "",
             poll_answer_choices: [],
-            poll_data_admin_data_object: null
+            poll_data_admin_data_object: null,
+            chosen_poll_choice: null
         },
         methods: {
             some_method: self.somemethod,
@@ -299,6 +302,7 @@ var app = function() {
             create_poll: self.create_new_poll,
             delete_poll: self.delete_poll_by_current_admin_id,
             poll_send_choice: self.send_choice,
+            poll_undo_choice: self.undo_choice,
             poll_toggle_open_status: self.toggle_accepting_answers
         }
 

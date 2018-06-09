@@ -44,8 +44,15 @@
             <h3>Poll Answering</h3>
             <div>
                 <div v-for="choice in poll_answer_choices">
-                    <button v-on:click="poll_send_choice(choice.option_id)">${choice.text}</button>
+                    <button v-on:click="poll_send_choice(choice)">${choice.text}</button>
                 </div>
+            </div>
+        </div>
+        <div v-if="page=='poll_answer_confirmed'">
+            <h3>Poll Answering</h3>
+            <div>
+                <p> You chose option: ${chosen_poll_choice.text}</p>
+                <button v-on:click="poll_undo_choice(chosen_poll_choice)">Undo Choice</button>
             </div>
         </div>
     </div>
