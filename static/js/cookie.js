@@ -19,7 +19,7 @@ var app = function() {
     */
 
     //uuid generation method (from https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript)
-    //not final uuid method
+    //not final UUID method
     self.uuidv4 = function () {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
             var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -33,9 +33,12 @@ var app = function() {
         var result = self.find_cookie();
         if (result != "") {
             var obj = JSON.parse(result);
+            //interchangeable with local variables for whatever fields you want to display in the webpage
             self.vue.question = obj.question;
             self.vue.UID = obj.UID;
             self.vue.answer = obj.answer;
+            //this one is somewhat more important, it determines whether or not an answer has been saved for the browser in use
+            //false by default
             self.vue.is_cookie = true;
         }
     };
@@ -69,41 +72,68 @@ var app = function() {
         return "";
     };
 
-    //once a question is answered, this stores the question's result
-    //eventually may also store an AJAX function that sends the cookie's data to the database
     //base code from https://www.w3schools.com/js/js_cookies.asp
-    //note: not all fields are included from the example of our actual project JSON
+    //str should be a JSON string
+    self.write_string = function (str) {
+        var d = new Date();
+        //7 = number of days until cookie expires (can be changed as necessary)
+        d.setTime(d.getTime() + ((7)*24*60*60*1000));
+        expires = 'expires=' + d.toUTCString();
+        document.cookie = "data=" + str + ";" + expires + ";path=/";
+        console.log("Wrote cookie with content: " + str);
+    };
+
+    //adds a field to the object with "key" as the key and "value" as the content
+    //key is a string and value can be anything
+    self.add_to_cookie = function (key, value) {
+        var result = self.find_cookie();
+        if (result == "") {
+            var my_JSON = '{"' + key + '":' + value + '}';
+            console.log("Writing new cookie.");
+            console.log("key: '" + key + "', value: " + value);
+            self.write_string(my_JSON);
+        } else {
+            var obj = JSON.parse(result);
+            console.log("Adding to existing cookie: " + result);
+            console.log("key: '" + key + "', value: " + value);
+            obj[key] = value;
+            var my_JSON = JSON.stringify(obj);
+            self.write_string(my_JSON);
+        }
+    };
+
+    //assembles a cookie using any number of add_to_cookie functions
+    //modify this according to what you want to store
     self.store_cookie = function (ans) {
-        //generate UID
-        var uid = self.uuidv4();
-        //put everything we need into a normal JS object
+        //set local variables
+        self.vue.question = "Do you prefer A or B?";
+        //again, not final UUID
+        self.vue.UID = self.uuidv4();
+        self.vue.answer = ans;
+        //call add_to_cookie for every field that is being written to the object stored in the cookie
+        self.add_to_cookie("question", self.vue.question);
+        self.add_to_cookie("UID", self.vue.UID);
+        self.add_to_cookie("answer", self.vue.answer);
+        /*
+        //alternate method
+        //put all your important fields into a JS object (my_obj)
         var my_obj = {
             question: "Do you prefer A or B?",
             //currently UID is only static (hard-coded)
             UID: uid,
             answer: ans
         };
-        //turn that object into a JSON string
+        //turn my_obj into a JSON string (my_JSON)
         var my_JSON = JSON.stringify(my_obj);
-        var d = new Date();
-        //7 = number of days until cookie expires (can be changed as necessary)
-        d.setTime(d.getTime() + ((7)*24*60*60*1000));
-        expires = 'expires=' + d.toUTCString();
-        document.cookie = "data=" + my_JSON + ";" + expires + ";path=/";
+        //write JSON string to cookie
+        self.write_string(my_JSON);
+        */
         self.vue.is_cookie = true;
-        self.vue.question = "Do you prefer A or B?";
-        self.vue.UID = uid;
-        self.vue.answer = ans;
     };
-
-
 
     //this doesn't actually delete the cookie, but it displays the page so that another answer can be made
     //when that new answer is made, the cookie will be overwritten
-    self.delete_cookie = function () {
-        self.vue.is_cookie = false;
-        self.vue.answer = null;
-    };
+    self.delete_cookie = function () { self.vue.is_cookie = false; };
 
     self.vue = new Vue({
         el: "#vue-div",
@@ -119,7 +149,7 @@ var app = function() {
             find_cookie: self.find_cookie,
             from_cookie: self.from_cookie,
             store_cookie: self.store_cookie,
-            //add_to_cookie: self.add_to_cookie,
+            add_to_cookie: self.add_to_cookie,
             delete_cookie: self.delete_cookie
         }
     });
