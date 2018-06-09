@@ -58,6 +58,19 @@ def delete_poll():
             deleted_poll_id=None
         ))
     
+def toggle_accepting_answers():
+    request_admin_id = request.vars.admin_id
+    record = get_poll_by_admin_id(request_admin_id)
+    try:
+        record.accepting_answers = not record.accepting_answers
+        record.update_record()
+        return response.json(dict(
+            is_poll_accpeting_answers=record.accepting_answers
+        ))
+    except AttributeError:
+        return response.json(dict(
+            is_poll_accpeting_answers=None
+        ))
     
 def db_insert_new_poll(cjso):
     poll_admin_id = cjso.uid
@@ -65,3 +78,38 @@ def db_insert_new_poll(cjso):
     print("DATE:", date, "POLL_ADMIN_ID:", poll_admin_id)
     insert_id = db.polls.insert(creation_unix_timestamp=date, admin_id=poll_admin_id, poll_json=cjso.get_json_string())
     return(insert_id, poll_admin_id)
+
+
+
+
+#------ Answerer Functions ------
+
+def answerer_get_poll_record():
+    request_poll_id = request.vars.poll_id
+    if request_poll_id is None:
+        return response.json(dict(
+            error="id_not_provided"
+        ))
+    record = get_poll_by_poll_id(request_poll_id)
+    if record is None:
+        #No Poll With This ID Exists
+        return response.json(dict(
+            error="poll_not_found"
+        ))
+    if record.accepting_answers is False:
+        return response.json(dict(
+            error="poll_closed"
+        ))
+    return record
+
+def answerer_get_poll_cjso(record):
+    cjso = ChartJsonStringObject(record.poll_json)
+
+def get_choices():
+    cjso = answerer_get_poll_cjso(answerer_get_poll_record())
+    raise NotImplementedException
+
+def send_choice():
+    record = answerer_get_poll_record()
+    cjso = answerer_get_poll_cjso(record)
+    pass

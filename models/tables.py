@@ -21,7 +21,8 @@ db.define_table('polls',
                Field('admin_id', "string"),
                Field('poll_json', "string"),
                Field('creator', default=get_email_if_logged_in()),
-               Field('protected', "boolean", default=False)
+               Field('protected', "boolean", default=False),
+               Field('accepting_answers', "boolean", default=False)
                )
 
 db.polls.creation_unix_timestamp.writeable = False
