@@ -42,6 +42,22 @@ def create_poll():
         poll_id = insert_result[0],
         admin_id = insert_result[1]
     ))
+
+
+def creator_get_poll_record():
+    request_admin_id = request.vars.admin_id
+    if request_admin_id is None:
+        return response.json(dict(
+            error="id_not_provided"
+        ))
+    record = get_poll_by_admin_id(request_admin_id)
+    if record is None:
+        #No Poll With This ID Exists
+        return response.json(dict(
+            error="poll_not_found"
+        ))
+    return record
+
         
 def delete_poll():
     request_admin_id = request.vars.admin_id
@@ -104,12 +120,43 @@ def answerer_get_poll_record():
 
 def answerer_get_poll_cjso(record):
     cjso = ChartJsonStringObject(record.poll_json)
+    
+def answerer_save_poll_cjso(record, cjso):
+    try:
+        record.poll_json = cjso.get_json_string()
+        record.update_record()
+        return response.json(dict(
+            updated_poll_id=record.id
+        ))
+    except AttributeError:
+        return response.json(dict(
+            error="update_failed"
+        ))
 
 def get_choices():
     cjso = answerer_get_poll_cjso(answerer_get_poll_record())
-    raise NotImplementedException
+    return response.json(dict(
+        choice=cjso.get_choices_list()
+    ))
 
 def send_choice():
+    option_id = request.vars.option_id
+    if not option_id:
+        return response.json(dict(
+            error="missing_option_id"
+        ))
     record = answerer_get_poll_record()
     cjso = answerer_get_poll_cjso(record)
-    pass
+    cjso.increment_option_count(option_id)
+    answerer_save_poll_cjso(record, cjso)
+
+def undo_choice():
+    option_id = request.vars.option_id
+    if not option_id:
+        return response.json(dict(
+            error="missing_option_id"
+        ))
+    record = answerer_get_poll_record()
+    cjso = answerer_get_poll_cjso(record)
+    cjso.decrement_option_count(option_id)
+    answerer_save_poll_cjso(record, cjso)

@@ -83,9 +83,12 @@ class ChartJsonStringObject:
     def get_json(self):
         return self._wrap_self_as_json_object()
 
-    def get_choices_list(self):
+    def get_choices_list_with_results(self):
         return list(self.choices[key]._wrap_self_as_json_object() for key in self.choices.keys())
 
+    def get_choices_list(self):
+        return list(self.choices[key]._wrap_self_as_simplified_json_object() for key in self.choices.keys())
+    
     def increment_option_count(self, option_id, increment_amount=1, also_change_response_count=True):
         self._change_option_count(option_id, increment_amount, also_change_response_count)
 
@@ -164,6 +167,12 @@ class ChartJsonStringObject:
             return {
                 "text": self.text,
                 "results": results,
+                "option_id": self.option_id
+            }
+        
+        def _wrap_self_as_simplified_json_object(self):
+            return {
+                "text": self.text,
                 "option_id": self.option_id
             }
 
