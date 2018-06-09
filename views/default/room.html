@@ -32,12 +32,13 @@
             <input type="text" v-model="choice_create_text">
             <button v-on:click="create_add_choice()">Create Choice</button>
             <button v-on:click="create_poll">Create Poll</button>
-        
         </div>
         <div v-if="page=='poll_admin'">
             <p>Poll Admin Page</p>
             <button v-on:click="delete_poll()">Delete newly created poll? (temporary button)</button>
             <button v-on:click="poll_toggle_open_status()">Toggle Poll Open Status (Default Closed)</button>
+            
+
             
         </div>
         <div v-if="page=='poll_answer'">
@@ -57,23 +58,25 @@
         </div>
     </div>
     
-    
-    
-    <h2 id="chart_main_title"></h2>
-    <div class="button_container">
-        <button class="btn large togglebutton" id="toggle_chart_viz">Hide/Show Chart</button>
-    </div>
-    <div id="chart_container">
-        <svg id="chart_main" style="padding-bottom:150;box-sizing: content-box"></svg>
-        <!--box-sizing: content-box style is there because stupid.css wants to overwrite it with something else by default-->
-    </div>
-    <div id="room_QR" style="display:none"></div>
-    <div class="button_container">
+    <div id="visualization_div">
+        <h2 id="chart_main_title"></h2>
+        <div class="button_container">
+            <button class="btn large togglebutton" id="toggle_chart_viz">Hide/Show Chart</button>
+        </div>
+        <div id="chart_container">
+            <svg id="chart_main" style="padding-bottom:150;box-sizing: content-box"></svg>
+            <!--box-sizing: content-box style is there because stupid.css wants to overwrite it with something else by default-->
+        </div>
+        <div id="room_QR" style="display:none"></div>
+        <div class="button_container">
         <button class="btn large togglebutton" id="toggle_QR_viz">Hide/Show QR Code</button>
+        </div>
+        <div class="button_container">
+            <button class="btn large" onclick="#">Close Poll</button>
+        </div>
     </div>
-    <div class="button_container">
-        <button class="btn large" onclick="#">Close Poll</button>
-    </div>
+    
+
 </body>
 
 <!--These are for ease of testing with brackets.-->

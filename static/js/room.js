@@ -1,3 +1,14 @@
+//@@@QR Test Code@@@
+
+TEST_QR_VALUE = "http://www.example.com"
+
+var QRCODE_WIDTH_AS_PERCENTAGE_OF_WINDOW = 0.4;
+var qrcode = new QRCode("room_QR", {
+    text: TEST_QR_VALUE,
+    width: QRCODE_WIDTH_AS_PERCENTAGE_OF_WINDOW*window.outerWidth,
+    height: QRCODE_WIDTH_AS_PERCENTAGE_OF_WINDOW*window.outerWidth
+});
+
 //-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//
 //Vue Code and page handling.
 //-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//
@@ -92,7 +103,9 @@ var app = function() {
             //do stuff
         } 
         else if(page_string == "poll_admin"){
-                  
+            qrcode.clear();
+            var str_url = window.location.href + "?id=" + self.vue.room_id;
+            qrcode.makeCode(str_url);
         }
         else if(page_string == "poll_answer"){
             self.get_poll_choices();
@@ -357,16 +370,7 @@ $("#toggle_QR_viz").click(function(){
 });
 
 
-//@@@QR Test Code@@@
 
-TEST_QR_VALUE = "http://www.example.com"
-
-var QRCODE_WIDTH_AS_PERCENTAGE_OF_WINDOW = 0.4;
-var qrcode = new QRCode("room_QR", {
-    text: TEST_QR_VALUE,
-    width: QRCODE_WIDTH_AS_PERCENTAGE_OF_WINDOW*window.outerWidth,
-    height: QRCODE_WIDTH_AS_PERCENTAGE_OF_WINDOW*window.outerWidth
-});
 
 
 //@@@Barchart Code@@@
