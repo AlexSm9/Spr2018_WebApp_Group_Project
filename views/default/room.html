@@ -15,6 +15,23 @@
 
 
 <body>
+    <div id="visualization_div">
+        <h2 id="chart_main_title"></h2>
+        <div class="button_container">
+            <button class="btn large togglebutton" id="toggle_chart_viz">Hide/Show Chart</button>
+        </div>
+        <div id="chart_container">
+            <svg id="chart_main" style="padding-bottom:150;box-sizing: content-box"></svg>
+            <!--box-sizing: content-box style is there because stupid.css wants to overwrite it with something else by default-->
+        </div>
+        <div id="room_QR" style="display:none"></div>
+        <div class="button_container">
+        <button class="btn large togglebutton" id="toggle_QR_viz">Hide/Show QR Code</button>
+        </div>
+        <div class="button_container">
+            <button class="btn large" onclick="#">Close Poll</button>
+        </div>
+    </div>
     <div id="vue-div">
         <h3>Hello Vue!</h3>
         <div v-if="page=='poll_create'">
@@ -58,23 +75,7 @@
         </div>
     </div>
     
-    <div id="visualization_div">
-        <h2 id="chart_main_title"></h2>
-        <div class="button_container">
-            <button class="btn large togglebutton" id="toggle_chart_viz">Hide/Show Chart</button>
-        </div>
-        <div id="chart_container">
-            <svg id="chart_main" style="padding-bottom:150;box-sizing: content-box"></svg>
-            <!--box-sizing: content-box style is there because stupid.css wants to overwrite it with something else by default-->
-        </div>
-        <div id="room_QR" style="display:none"></div>
-        <div class="button_container">
-        <button class="btn large togglebutton" id="toggle_QR_viz">Hide/Show QR Code</button>
-        </div>
-        <div class="button_container">
-            <button class="btn large" onclick="#">Close Poll</button>
-        </div>
-    </div>
+
     
 
 </body>

@@ -9,6 +9,8 @@ var qrcode = new QRCode("room_QR", {
     height: QRCODE_WIDTH_AS_PERCENTAGE_OF_WINDOW*window.outerWidth
 });
 
+
+
 //-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//
 //Vue Code and page handling.
 //-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//
@@ -98,6 +100,7 @@ var app = function() {
     }
     
     self.handle_page_change = function(page_string){
+//        $("#visualization_div").hide()
         self.vue.page = page_string;
         if(page_string == "poll_create"){
             //do stuff
@@ -106,6 +109,13 @@ var app = function() {
             qrcode.clear();
             var str_url = window.location.href + "?id=" + self.vue.room_id;
             qrcode.makeCode(str_url);
+            $("#visualization_div").show()
+            callbackfunction = function(){
+                console.log("retrievedjsondata", self.vue.poll_data_admin_data_object)
+                draw_bargraph(self.vue.poll_data_admin_data_object.to_JSON_string()); //intentionally breaking this
+            }
+            self.get_poll(callbackfunction);
+
         }
         else if(page_string == "poll_answer"){
             self.get_poll_choices();
@@ -235,7 +245,7 @@ var app = function() {
         );
     };
     
-    self.get_poll = function(){
+    self.get_poll = function(callbackfunction){
         var parameters = {
             admin_id: self.vue.admin_id
         };
@@ -244,7 +254,11 @@ var app = function() {
             function(data){
                 console.log("IN get_poll, DATA:", data);
                 //callback
-                self.vue.poll_data_admin_data_object = new ChartDataWrapper(data.json_string);
+                self.vue.poll_data_admin_data_object = new ChartDataWrapper(data.poll_json);
+                console.log("RESULT OF GET_POLL", self.vue.poll_data_admin_data_object);
+                if(callbackfunction){
+                    callbackfunction();
+                }
             }
         );
     };
