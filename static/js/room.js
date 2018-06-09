@@ -244,10 +244,20 @@ var app = function() {
             parameters,
             function(data){
                 console.log("IN edit_poll, DATA:", data);
-                //callback
-                self.vue.admin_id = null;
             }
         );
+    };
+    
+    self.toggle_accepting_answers = function(){
+        var parameters = {
+            admin_id: self.vue.admin_id
+        };
+        $.post(toggle_answer_accept_admin_api_url,
+            parameters,
+            function(data){
+                console.log("IN toggle_accepting_answers, DATA:", data);
+            }
+        );  
     };
     
     //**************** END API CALLS ****************
@@ -287,7 +297,8 @@ var app = function() {
             create_remove_choice: self.remove_choice_from_choice_array,
             create_poll: self.create_new_poll,
             delete_poll: self.delete_poll_by_current_admin_id,
-            poll_send_choice: self.send_choice
+            poll_send_choice: self.send_choice,
+            poll_toggle_open_status: self.toggle_accepting_answers
         }
 
     });

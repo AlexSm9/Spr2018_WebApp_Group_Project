@@ -83,10 +83,10 @@ class ChartJsonStringObject:
     def get_json(self):
         return self._wrap_self_as_json_object()
 
-    def get_choices_list_with_results(self):
+    def get_choices_list(self):
         return list(self.choices[key]._wrap_self_as_json_object() for key in self.choices.keys())
 
-    def get_choices_list(self):
+    def get_choices_list_no_results(self):
         return list(self.choices[key]._wrap_self_as_simplified_json_object() for key in self.choices.keys())
     
     def increment_option_count(self, option_id, increment_amount=1, also_change_response_count=True):
