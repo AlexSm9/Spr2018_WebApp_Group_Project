@@ -19,6 +19,7 @@ var app = function() {
     */
 
     //uuid generation method (from https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript)
+    //not final uuid method
     self.uuidv4 = function () {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
             var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -39,7 +40,18 @@ var app = function() {
         }
     };
 
-    //returns content of stored cookie
+    //similar to get_cookie, but only returns the associated value from the JSON object, given a key
+    //key must be in the form of a string
+    self.from_cookie = function (key) {
+        var result = self.find_cookie();
+        if (result != "") {
+            var obj = JSON.parse(result);
+            return obj[key];
+        }
+        return null;
+    };
+
+    //returns content of stored cookie (JSON string)
     //from https://www.w3schools.com/js/js_cookies.asp
     self.find_cookie = function () {
         var name = "data=";
@@ -58,7 +70,7 @@ var app = function() {
     };
 
     //once a question is answered, this stores the question's result
-    //eventually may store an AJAX function that sends the cookie's data to the database
+    //eventually may also store an AJAX function that sends the cookie's data to the database
     //base code from https://www.w3schools.com/js/js_cookies.asp
     //note: not all fields are included from the example of our actual project JSON
     self.store_cookie = function (ans) {
@@ -84,9 +96,11 @@ var app = function() {
         self.vue.answer = ans;
     };
 
+
+
     //this doesn't actually delete the cookie, but it displays the page so that another answer can be made
     //when that new answer is made, the cookie will be overwritten
-    self.delete_cookie = function() {
+    self.delete_cookie = function () {
         self.vue.is_cookie = false;
         self.vue.answer = null;
     };
@@ -102,7 +116,10 @@ var app = function() {
             is_cookie: false
         },
         methods: {
+            find_cookie: self.find_cookie,
+            from_cookie: self.from_cookie,
             store_cookie: self.store_cookie,
+            //add_to_cookie: self.add_to_cookie,
             delete_cookie: self.delete_cookie
         }
     });

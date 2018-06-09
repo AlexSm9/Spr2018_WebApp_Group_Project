@@ -26,7 +26,7 @@
     <div v-if="is_cookie">
       <p>Question: ${question}</p>
       <p>UID: ${UID}</p>
-      <h5>Your answer is ${answer}.</h5>
+      <h5>Your answer is ${from_cookie("answer")}.</h5>
       <!--final version could make the rest of this div conditional on whether the room owner has prohibited answer changes-->
       <p>Would you like to change it?</p>
       <!--button click -> call function in api that deletes cookie-->
@@ -38,4 +38,4 @@
 
 </div>
 
-<script src="{{=URL('static', 'js/default_index.js')}}"></script>
+<script src="{{=URL('static', 'js/cookie.js')}}"></script>
