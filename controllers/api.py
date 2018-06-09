@@ -110,7 +110,8 @@ def delete_poll():
 def toggle_accepting_answers():
     try:
         record = creator_get_poll_record()
-        record.accepting_answers = not record.accepting_answers
+        toggle_to = request.vars.toggle_to
+        record.accepting_answers = toggle_to if type(toggle_to) is bool else not record.accepting_answers
         record.update_record()
         print("Successfully toggled accepting_answers of poll with id:", record.id)
         print("The new value of 'accepting_answers' is", record.accepting_answers)

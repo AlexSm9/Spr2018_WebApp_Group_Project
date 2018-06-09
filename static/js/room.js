@@ -248,9 +248,10 @@ var app = function() {
         );
     };
     
-    self.toggle_accepting_answers = function(){
+    self.toggle_accepting_answers = function(toggle_to=null){
         var parameters = {
-            admin_id: self.vue.admin_id
+            admin_id: self.vue.admin_id,
+            toggle_to: toggle_to
         };
         $.post(toggle_answer_accept_admin_api_url,
             parameters,
