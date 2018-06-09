@@ -60,12 +60,11 @@ def creator_get_poll_record():
 
         
 def delete_poll():
-    request_admin_id = request.vars.admin_id
-    print("DELETE POLL WITH ADMIN ID:", request_admin_id)
     try:
-        record = get_poll_by_admin_id(request_admin_id)
+        record = creator_get_poll_record()
         poll_id_confirmation = record.id
         record.delete_record()
+        print("Successfully deleted poll with id:", poll_id_confirmation)
         return response.json(dict(
             deleted_poll_id=poll_id_confirmation
         ))
@@ -80,6 +79,8 @@ def toggle_accepting_answers():
     try:
         record.accepting_answers = not record.accepting_answers
         record.update_record()
+        print("Successfully toggled accepting_answers of poll with id:", record.id)
+        print("The new value of 'accepting_answers' is", record.accepting_answers)
         return response.json(dict(
             is_poll_accpeting_answers=record.accepting_answers
         ))
