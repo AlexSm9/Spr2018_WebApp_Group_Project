@@ -95,7 +95,7 @@ var app = function() {
                   
         }
         else if(page_string == "poll_answer"){
-                  
+            self.get_poll_choices();
         }
         else if(page_string == "poll_answer_confirmed"){
         
@@ -118,6 +118,15 @@ var app = function() {
         }
     };
     
+    
+    function process_error(data){
+        if(data.error != null){
+            console.log("Encountered API Error:", data.error);
+            return true;
+        }
+        return false;
+    }
+    
     //############ END HELPER FUNCTIONS #############
 
     
@@ -125,13 +134,14 @@ var app = function() {
             
     self.get_poll_choices = function(){
         var parameters = {
-            question: " "
+            poll_id: self.vue.room_id
         };
         $.post(get_poll_choices_api_url,
             parameters,
             function(data){
                 //callback
                 console.log("IN get_poll_choices_api_url, DATA:", data);
+                if(process_error(data)){return;}
                 self.vue.poll_answer_choices = data.choices;
             }
         );
@@ -139,14 +149,14 @@ var app = function() {
     
     self.send_choice = function(option_id){
         var parameters = {
-            selected_option: option_id
+            option_id: option_id,
+            poll_id: self.vue.room_id
         };
         $.post(send_choice_api_url,
             parameters,
             function(data){
                 //callback
                 console.log("IN send_choice, DATA:", data);
-                self.vue.poll_answer_choices = data.choices;
                 self.handle_page_change("poll_answer_confirmed");
             }
         );
@@ -154,14 +164,14 @@ var app = function() {
     
     self.undo_choice = function(){
         var parameters = {
-            choice: " "
+            option_id: option_id,
+            poll_id: self.vue.room_id
         };
         $.post(undo_choice_api_url,
             parameters,
             function(data){
                 //callback
                 console.log("IN undo_choice, DATA:", data);
-                self.vue.poll_answer_choices = data.choices;
                 self.handle_page_change("poll_answer");
             }
         );
@@ -276,7 +286,8 @@ var app = function() {
             create_add_choice: self.add_answer_choice,
             create_remove_choice: self.remove_choice_from_choice_array,
             create_poll: self.create_new_poll,
-            delete_poll: self.delete_poll_by_current_admin_id
+            delete_poll: self.delete_poll_by_current_admin_id,
+            poll_send_choice: self.send_choice
         }
 
     });

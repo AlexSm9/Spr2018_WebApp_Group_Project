@@ -17,6 +17,19 @@ def get_question():
 
 
 
+
+
+class SubFunctionError:
+    
+    def __init__(error_string):
+        self.errorstring = error_string
+        
+    def get_error_dict(self):
+        return dict(
+            error=self.errorstring
+        )
+        
+
 #$$AccessFunctions$$
 def get_poll_by_admin_id(admin_id):
     return db(db.polls.admin_id == admin_id).select().first()
@@ -130,13 +143,13 @@ def edit_poll():
     record = creator_get_poll_record()
     edited_json_string = request.vars.poll_json
     if not edited_json_string:
-        return response.json((
+        return response.json(dict(
             error="no_edit_parameter"
         ))
     try:
         cjso = ChartJsonStringObject(edited_json_string)
     except:
-        return response.json((
+        return response.json(dict(
             error="malformed_json_string"
         ))
     save_poll_cjso(record, cjso)
@@ -171,9 +184,11 @@ def answerer_get_poll_record():
 
 
 def get_choices():
-    cjso = get_poll_cjso(answerer_get_poll_record())
+    record = answerer_get_poll_record()
+    print("Record prior to return in 'answerer_get_poll_record':", record)
+    cjso = get_poll_cjso(record)
     return response.json(dict(
-        choice=cjso.get_choices_list()
+        choices=cjso.get_choices_list()
     ))
 
 def send_choice():

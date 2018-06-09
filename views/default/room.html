@@ -38,6 +38,14 @@
             <p>Poll Admin Page</p>
             <button v-on:click="delete_poll()">Delete newly created poll? (temporary button)</button>
         </div>
+        <div v-if="page=='poll_answer'">
+            <h3>Poll Answering</h3>
+            <div>
+                <div v-for="choice in poll_answer_choices">
+                    <button v-on:click="poll_send_choice(choice.option_id)">${choice.text}</button>
+                </div>
+            </div>
+        </div>
     </div>
     
     
