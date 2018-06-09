@@ -21,7 +21,7 @@ def get_question():
 
 class SubFunctionError:
     
-    def __init__(error_string):
+    def __init__(self, error_string):
         self.errorstring = error_string
         
     def get_error_dict(self):
@@ -44,13 +44,11 @@ def save_poll_cjso(record, cjso):
     try:
         record.poll_json = cjso.get_json_string()
         record.update_record()
-        return response.json(dict(
+        return dict(
             updated_poll_id=record.id
-        ))
+        )
     except AttributeError:
-        return response.json(dict(
-            error="record_update_failed"
-        ))
+        return SubFunctionError("record_update_failed")
 #$$END_AccessFunctions$$
 
 #++CreatePoll++
@@ -87,15 +85,11 @@ def db_insert_new_poll(cjso):
 def creator_get_poll_record():
     request_admin_id = request.vars.admin_id
     if request_admin_id is None:
-        return response.json(dict(
-            error="id_not_provided"
-        ))
+        return SubFunctionError("id_not_provided")
     record = get_poll_by_admin_id(request_admin_id)
     if record is None:
         #No Poll With This ID Exists
-        return response.json(dict(
-            error="poll_not_found"
-        ))
+        return SubFunctionError("poll_not_found")
     return record
 
         
@@ -130,7 +124,9 @@ def toggle_accepting_answers():
     
 def get_poll():
     try:
-        cjso = get_poll_cjso(creator_get_poll_record())
+        record = creator_get_poll_record()
+        if record.__class__ is SubFunctionError: return response.json(record.get_error_dict())
+        cjso = get_poll_cjso(record)
         return response.json(dict(
             poll_json = cjso.get_json_string()
         ))
@@ -141,6 +137,7 @@ def get_poll():
         
 def edit_poll():
     record = creator_get_poll_record()
+    if record.__class__ is SubFunctionError: return response.json(record.get_error_dict())
     edited_json_string = request.vars.poll_json
     if not edited_json_string:
         return response.json(dict(
@@ -152,7 +149,12 @@ def edit_poll():
         return response.json(dict(
             error="malformed_json_string"
         ))
-    save_poll_cjso(record, cjso)
+    save_result = save_poll_cjso(record, cjso)
+    if save_result.__class__ is SubFunctionError:
+        return response.json(save_result.get_error_dict())
+    else:
+        return response.json(save_result)
+
 
         
 
@@ -164,19 +166,13 @@ def edit_poll():
 def answerer_get_poll_record():
     request_poll_id = request.vars.poll_id
     if request_poll_id is None:
-        return response.json(dict(
-            error="id_not_provided"
-        ))
+        return SubFunctionError("id_not_provided")
     record = get_poll_by_poll_id(request_poll_id)
     if record is None:
         #No Poll With This ID Exists
-        return response.json(dict(
-            error="poll_not_found"
-        ))
+        return SubFunctionError("poll_not_found")
     if record.accepting_answers is False:
-        return response.json(dict(
-            error="poll_closed"
-        ))
+        return SubFunctionError("poll_closed")
     return record
 
 
@@ -185,7 +181,7 @@ def answerer_get_poll_record():
 
 def get_choices():
     record = answerer_get_poll_record()
-    print("Record prior to return in 'answerer_get_poll_record':", record)
+    if record.__class__ is SubFunctionError: return response.json(record.get_error_dict())
     cjso = get_poll_cjso(record)
     return response.json(dict(
         choices=cjso.get_choices_list()
