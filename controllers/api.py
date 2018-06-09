@@ -53,7 +53,8 @@ def save_poll_cjso(record, cjso):
 
 #++CreatePoll++
 def poll_choices_to_list():
-    return list(str(json.loads(item)["text"]) for item in request.vars["choices[]"])
+    choice_list = json.loads(request.vars.choices)
+    return list(str(json.loads(item)["text"]) for item in choice_list)
 
 def create_poll():
     print("Recieved Question Text:")

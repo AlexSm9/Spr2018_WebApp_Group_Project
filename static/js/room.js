@@ -212,7 +212,7 @@ var app = function() {
         }
         var parameters = {
             question: self.vue.poll_create_question,
-            choices: choices
+            choices: JSON.stringify(choices)
         };
         console.log(parameters);
         $.post(create_poll_admin_api_url,
@@ -490,7 +490,7 @@ function draw_bargraph(json_datastring_test){
     
     var bar_pixel_heights = [];
     
-    var data_bars = chart_main.selectAll("rect")
+    var data_bars = chart_main.selectAll("rect").remove().exit()
         .data(CDW.options)
         .enter()
         .append("rect")
@@ -511,7 +511,7 @@ function draw_bargraph(json_datastring_test){
               return get_bar_color_from_array_index(index);
         });
         
-    var onbar_values = chart_main.selectAll("text")
+    var onbar_values = chart_main.selectAll("text").remove().exit()
         .data(CDW.options)
         .enter()
         .append("text").attr("class", "chart_onbar_value")
