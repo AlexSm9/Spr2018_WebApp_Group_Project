@@ -65,13 +65,19 @@ var app = function() {
         var r_id = get_room_id_parameter(window.location.href)
         if(r_id==null){
             var existing_id = get_active_poll_administration_id_from_cookie();
-            if(existing_id != null){
-                if(verify_admin_key_and_retrieve_data(existing_id)){
-                    //TODO: IMPLEMENT
-                    return "poll_admin";
-                }
+//            if(existing_id != null){
+//                if(verify_admin_key_and_retrieve_data(existing_id)){
+//                    return "poll_admin";
+//                }
+//            }
+//            return "poll_create";
+            if(existing_id == null){
+                return "poll_create";
+            }else{
+                //this is done on a callback, so return null as page target
+                verify_admin_key_and_retrieve_data(existing_id);
+                return null;
             }
-            return "poll_create";
         }else{
             self.vue.room_id = r_id;
             if(is_answered_poll_id_from_localstorage(r_id)){
@@ -90,17 +96,39 @@ var app = function() {
     
     function get_active_poll_administration_id_from_cookie(){
         //retrieve active administration id from cookie
-        //TODO: implement
-        return "";
+        console.log("Retrieved room admin id:", self.from_cookie("current_room_admin_id"));
+        return self.from_cookie("current_room_admin_id");
     }
     
-    function save_active_poll_administration_id_to_cookie(){
-        //retrieve active administration id from cookie
-    }
+//    function save_active_poll_administration_id_to_cookie(){
+//        //retrieve active administration id from cookie
+//    }
     
     function verify_admin_key_and_retrieve_data(existing_id){
         //send a post request to server asking if ID exists.
         //TODO: IMPLEMENT
+        console.log("existing_id", existing_id);
+        parameters = {
+            admin_id: existing_id
+        }
+        $.post(get_poll_admin_api_url,
+            parameters,
+            function(data){
+                console.log("IN verify_admin_key_and_retrieve_data, DATA:", data);
+                //callback
+                if(data.poll_json){
+                    var CDW = new ChartDataWrapper(data.poll_json);
+                    self.vue.poll_data_admin_data_object = CDW;
+                    self.vue.admin_id = CDW.UID;
+                    self.vue.room_id = data.room_id;
+                    self.handle_page_change("poll_admin");
+                }else{
+                    self.handle_page_change("poll_create");
+                }
+            }
+        )
+        
+       // self.vue.admin_id = existing_id;
         return false;
     }
     
@@ -122,7 +150,7 @@ var app = function() {
             $("#visualization_div").show()
             callbackfunction = function(){
                 console.log("retrievedjsondata", self.vue.poll_data_admin_data_object)
-                draw_bargraph(self.vue.poll_data_admin_data_object.to_JSON_string()); //intentionally breaking this
+                draw_bargraph(self.vue.poll_data_admin_data_object.to_JSON_string()); 
             }
             self.get_poll(callbackfunction);
 
@@ -234,6 +262,7 @@ var app = function() {
                 self.vue.admin_id = data.admin_id;
                 self.vue.room_id = data.poll_id;
                 self.handle_page_change("poll_admin");
+                self.add_to_cookie("current_room_admin_id", JSON.stringify(data.admin_id));
             }
         );
     };
@@ -250,12 +279,13 @@ var app = function() {
                 //callback
                 self.vue.admin_id = null;
                 self.vue.room_id = null;
+                self.delete_cookie_key("current_room_admin_id");
                 self.handle_page_change("poll_create");
             }
         );
     };
     
-    self.get_poll = function(callbackfunction){
+    self.get_poll = function(callbackfunction=null){
         var parameters = {
             admin_id: self.vue.admin_id
         };
@@ -321,6 +351,7 @@ var app = function() {
     self.from_cookie = function (key) {
         var result = self.find_cookie();
         if (result != "") {
+            console.log("cookie result:", result)
             var obj = JSON.parse(result);
             return obj[key];
         }
@@ -373,6 +404,23 @@ var app = function() {
         }
     };
     
+    self.delete_cookie_key = function(key){
+        //DOES NOT CURRENTLY WORK
+        var result = self.find_cookie();
+        if (result != "") {
+            console.log("deleting cookie:", result)
+            var obj = JSON.parse(result);
+            var delkey = JSON.stringify(key)//'"'+key+'"';
+            console.log("deleting key", delkey);
+            console.log("Should not be null:", obj.delkey);
+            delete obj.delkey;
+            var my_JSON = JSON.stringify(obj);
+            console.log("deleting cookie result:", my_JSON)
+            self.write_string(my_JSON);
+        }
+        return null;
+    }
+    
     self.delete_cookie = function () { self.vue.is_cookie = false; };
     
     
@@ -416,7 +464,10 @@ var app = function() {
 
     });
     
-    self.handle_page_change(determine_starting_page());
+    var start_page = determine_starting_page()
+    if(start_page!==null){
+        self.handle_page_change(start_page);
+    }
     console.log("STARTING PAGE", self.vue.page);
 
     $("#vue-div").show();

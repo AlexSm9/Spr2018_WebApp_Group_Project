@@ -131,7 +131,8 @@ def get_poll():
         if record.__class__ is SubFunctionError: return response.json(record.get_error_dict())
         cjso = get_poll_cjso(record)
         return response.json(dict(
-            poll_json = cjso.get_json_string()
+            poll_json = cjso.get_json_string(),
+            room_id = record.id
         ))
     except AttributeError:
         return response.json(dict(
