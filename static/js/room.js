@@ -416,20 +416,8 @@ var app = function() {
     };
     
     self.delete_cookie_key = function(key){
-        //FIXME: DOES NOT CURRENTLY WORK
-        var result = self.find_cookie();
-        if (result != "") {
-            console.log("deleting cookie:", result)
-            var obj = JSON.parse(result);
-            var delkey = JSON.stringify(key)//'"'+key+'"';
-            console.log("deleting key", delkey);
-            console.log("Should not be null:", obj.delkey);
-            delete obj.delkey;
-            var my_JSON = JSON.stringify(obj);
-            console.log("deleting cookie result:", my_JSON)
-            self.write_string(my_JSON);
-        }
-        return null;
+        self.add_to_cookie(key, null);
+        return;
     }
     
     self.delete_cookie = function () { self.vue.is_cookie = false; };

@@ -161,6 +161,8 @@ class ChartJsonStringObject:
 
         def change_count(self, count_change):
             self.count += count_change
+            if self.count < 0:
+                self.count = 0
 
         def set_text(self, new_text):
             self.text = new_text
