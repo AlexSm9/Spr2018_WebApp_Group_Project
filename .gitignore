@@ -1,3 +1,7 @@
+#web2py stuff that should not be committed
+databases/*
+errors/*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
