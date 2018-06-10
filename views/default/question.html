@@ -10,9 +10,9 @@
   //var answer_url
   //This call will return id of user answer to the database before user is redirected to answer page
 </script>
-
 {{end}}
 
+<div class="background_color" style="background-color: #9BB8A1;">
 <!--Code for answering a question-->
 <div class="main_content">
 
@@ -22,17 +22,18 @@
 
             <p class="prompt_text">Question:</p>
 
-            <p class="question_text">${question}</p>
+            <p class="title_text">${question}</p>
 
             <div v-for="ans in answers" class="answer">
                 <!-- Link will have option id, amount to imcrement comment, timestamp -->
-                <a class="btn blue" href="">${ans}</a>
+                <div href="" class="btnn center" style="width: 200px; margin-bottom: 20px;"><span>${ans}</span></div>
             </div>
 
         </div>
 
     </div>
 
+</div>
 </div>
 
 <script src="{{=URL('static', 'js/default_question.js')}}"></script>

@@ -1,6 +1,15 @@
 {{extend 'layout.html'}}
 
+{{block head}}
+<script src="{{=URL('static', 'js/vue.js')}}"></script>
+<script>
+  var get_question_url = "{{=URL('api', 'get_question')}}";
+
+</script>
+{{end}}
+
 <div class="enter_roomcode">
+	    <div id="vue-div" class="display:none">
 
   <p class="prompt_text">My Polls</p>
 
@@ -11,7 +20,7 @@
 				</div>
 			</div>
 			<div class="third polls compressible">
-				<div class="memo_title center" style="font-weight: bold; font-size: 100%;margin-top:20px; margin-bottom: 5px;">polls from database
+				<div class="question center" style="font-weight: bold; font-size: 100%;margin-top:20px; margin-bottom: 5px;">${question}
 				</div>
 			</div>
 			<div class="third button_list compressible">
@@ -26,4 +35,6 @@
 			</div>
   	</div>
 	</div>	
+	</div>
 
+<script src="{{=URL('static', 'js/default_question.js')}}"></script>

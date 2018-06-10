@@ -1,21 +1,35 @@
 {{extend 'layout.html'}}
 
+<div class="header_image" style="background-image: 
+    url(https://www.desktopbackground.org/p/2015/02/08/899591_blackboard_3840x1080_h.jpg); height: 250px;">
+</div>
+
+<!-- <div class="header_image" style="background-image: 
+      url(https://icc.edu/arts/files/icc-pac-rental-lecture-recital-hall.jpg); height: 300px;">
+      </div> -->
 <div class="create_question">
-
-    <p class="prompt_text">What kind of question would you like to make?</p>
-
+   
+    <p class="title_text">What kind of question would you like to make?</p>
     <div class="multiple_choice">
-        <a class="btn blue" href="{{=URL('default', 'multiple')}}">Multiple Choice</a>
+        <a href="multiple.html">
+            <button class="button" style="vertical-align:middle; width:250px; height:100px;"> 
+                <span>Multiple Choice</span>
+            </button>
+        </a>
+    
+        <a href="elimination.html">
+            <button class="button" style="vertical-align:middle; width:350px; height:100px;">
+                <span>Elimination - Multiple Choice</span>
+            </button>
+        </a>
+
+        <a href="ranked.html">
+            <button class="button" style="vertical-align:middle; width:250px; height:100px;">
+                <span>Ranked Choice</span>
+            </button>
+        </a>
     </div>
 
-    <!--
-    <div class="elimination">
-        <a class="btn blue" href="{{=URL('default', 'elimination')}}">Elimination - Multiple Choice</a>
-    </div>
-
-    <div class="ranked">
-        <a class="btn blue" href="{{=URL('default', 'ranked')}}">Ranked Choice</a>
-    </div>
-    -->
 
 </div>
+
