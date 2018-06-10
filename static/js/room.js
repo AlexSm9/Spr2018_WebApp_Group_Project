@@ -168,11 +168,8 @@ var app = function() {
             $("#room_id_div").attr("href", str_url);
             $("#room_id_number").text(self.vue.room_id)
             $("#visualization_div").show()
-            callbackfunction = function(){
-                console.log("retrievedjsondata", self.vue.poll_data_admin_data_object)
-                draw_bargraph(self.vue.poll_data_admin_data_object.to_JSON_string()); 
-            }
-            self.get_poll(callbackfunction);
+            
+            self.refresh_chart_data_admin();
 
         }
         else if(page_string == "poll_answer"){
@@ -325,6 +322,12 @@ var app = function() {
             }
         );
     };
+
+    self.refresh_chart_data_admin = function(){
+        console.log("refreshed poll data");
+        var cb = function(){draw_bargraph(self.vue.poll_data_admin_data_object)};
+        self.get_poll(cb);
+    }
 
     self.edit_poll = function(){
         var parameters = {
@@ -607,19 +610,9 @@ function limit_text_length(string, max_length, ellipsis_limit=true){
 
 //+++++++++++++++++++++++++++
 
-//window.onload = function(){
-//    console.log("Page Reloaded");
-//    d3.select('p').text("Hello d3 selectors!");
-//    
-//    draw_bargraph(JSON_TEST_STRING);
-//        
-//};
 
-
-function draw_bargraph(json_datastring_test){
-    
-    CDW = new ChartDataWrapper(json_datastring_test);
-    
+function draw_bargraph(CDW){
+        
     d3.select('h2').text(CDW.question);
     
     var chart_main_width = clamp((CHART_WIDTH_AS_PERCENTAGE_OF_WINDOW*window.outerWidth), MAX_CHART_WIDTH, MIN_CHART_WIDTH);
