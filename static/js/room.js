@@ -98,8 +98,11 @@ var app = function() {
     
     function get_active_poll_administration_id_from_cookie(){
         //retrieve active administration id from cookie
-        console.log("Retrieved room admin id:", self.from_cookie("current_room_admin_id"));
-        return self.from_cookie("current_room_admin_id");
+        var admin_id_cookie_dict = self.from_cookie("current_room_admin_id");
+        if(admin_id_cookie_dict===null){return null;}
+        var id_from_cookie = admin_id_cookie_dict.a_id;
+        console.log("Retrieved room admin id:", id_from_cookie);
+        return id_from_cookie
     }
     
 //    function save_active_poll_administration_id_to_cookie(){
@@ -273,7 +276,8 @@ var app = function() {
                 self.vue.admin_id = data.admin_id;
                 self.vue.room_id = data.poll_id;
                 self.handle_page_change("poll_admin");
-                self.add_to_cookie("current_room_admin_id", JSON.stringify(data.admin_id));
+                var admin_id_cookie_dict = {a_id: data.admin_id};
+                self.add_to_cookie("current_room_admin_id", JSON.stringify(admin_id_cookie_dict));
             }
         );
     };
