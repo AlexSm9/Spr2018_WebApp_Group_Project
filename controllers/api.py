@@ -66,7 +66,7 @@ def create_poll():
     cjso = ChartJsonStringObject()
     cjso.set_question(request.vars.question)
     for choice in choices:
-        cjso.add_choice(str(choice["text"]))
+        cjso.add_choice(str(choice["text"]), None, choice["sort_index"])
     print(cjso)
     insert_result = db_insert_new_poll(cjso)
     if insert_result[0] is None:
