@@ -43,6 +43,8 @@ PollCreationAnswerObject.prototype.to_JSON_string = function(optional_index=null
 var app = function() {
 
     var self = {};
+    
+    self.refreshinterval = null;
 
     Vue.config.silent = false; // show all warnings
 
@@ -158,6 +160,7 @@ var app = function() {
     self.handle_page_change = function(page_string){
 //        $("#visualization_div").hide()
         self.vue.page = page_string;
+        clearInterval(self.refreshinterval);
         if(page_string == "poll_create"){
             //do stuff
         } 
@@ -170,7 +173,7 @@ var app = function() {
             $("#visualization_div").show()
             
             self.refresh_chart_data_admin();
-
+            self.refreshinterval = setInterval(self.refresh_chart_data_admin, 500);
         }
         else if(page_string == "poll_answer"){
             self.get_poll_choices();
