@@ -152,7 +152,3 @@ if configuration.get('scheduler.enabled'):
 # after defining tables, uncomment below to enable auditing
 # -------------------------------------------------------------------------
 # auth.enable_record_versioning(db)
-
-mail.settings.server = settings.email_server
-mail.settings.sender = settings.email_sender
-mail.settings.login = settings.email_login

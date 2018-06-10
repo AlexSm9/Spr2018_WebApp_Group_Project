@@ -1,0 +1,77 @@
+/* line 1, ../sass/_main.scss */
+.colorful {
+  color: #bb8833;
+}
+
+/* index */
+
+div.buttons {
+    padding: 20px;
+    text-align: center;
+}
+
+div.button_create {
+    padding: 5px;
+}
+
+div.button_answer .btn {
+    font-size: 20px;
+}
+
+div.button_profile .btn {
+    font-size: 20px;
+}
+
+/* join.html */
+
+div.enter_roomcode {
+    padding: 20px;
+}
+
+div.join_room {
+    padding: 5px;
+    text-align: center;
+}
+
+/* question.html */
+
+div.question {
+    padding: 20px;
+    text-align: center;
+}
+
+p.question_text {
+    padding-bottom: 5px;
+    font-size: 250%;
+    text-align: center;
+}
+
+/* create.html */
+
+div.create_question {
+    padding: 20px;
+    text-align: center;
+}
+
+div.multiple_choice {
+    padding: 5px;
+}
+
+div.elimination {
+    padding: 5px;
+}
+
+div.ranked {
+    padding: 5px;
+}
+
+/* multiple files */
+
+p.prompt_text {
+    font-size: 200%;
+    text-align: center;
+}
+
+.btn {
+    font-size: 24px;
+}
