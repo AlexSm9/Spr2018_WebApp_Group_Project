@@ -94,6 +94,10 @@ var app = function() {
         return "";
     }
     
+    function save_active_poll_administration_id_to_cookie(){
+        //retrieve active administration id from cookie
+    }
+    
     function verify_admin_key_and_retrieve_data(existing_id){
         //send a post request to server asking if ID exists.
         //TODO: IMPLEMENT
