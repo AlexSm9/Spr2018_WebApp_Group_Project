@@ -24,7 +24,12 @@
             <svg id="chart_main" style="padding-bottom:150;box-sizing: content-box"></svg>
             <!--box-sizing: content-box style is there because stupid.css wants to overwrite it with something else by default-->
         </div>
-        <div id="room_QR" style="display:none"></div>
+        <div id="enter_room_container" style="display:none">
+            <a id="room_id_div">
+                <span>Room ID: </span><span id="room_id_number"></span>
+            </a>
+            <div id="room_QR"></div>
+        </div>
         <div class="button_container">
         <button class="btn large togglebutton" id="toggle_QR_viz">Hide/Show QR Code</button>
         </div>

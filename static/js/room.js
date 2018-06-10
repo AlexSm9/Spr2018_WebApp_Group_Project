@@ -98,9 +98,9 @@ var app = function() {
     
     function get_active_poll_administration_id_from_cookie(){
         //retrieve active administration id from cookie
-        var admin_id_cookie_dict = self.from_cookie("current_room_admin_id");
+        var admin_id_cookie_dict = JSON.parse(self.from_cookie("current_room_admin_id"));
         if(admin_id_cookie_dict===null){return null;}
-        var id_from_cookie = admin_id_cookie_dict.a_id;
+        var id_from_cookie = admin_id_cookie_dict["a_id"];
         console.log("Retrieved room admin id:", id_from_cookie);
         return id_from_cookie
     }
@@ -159,6 +159,8 @@ var app = function() {
             qrcode.clear();
             var str_url = window.location.href + "?id=" + self.vue.room_id;
             qrcode.makeCode(str_url);
+            $("#room_id_div").attr("href", str_url);
+            $("#room_id_number").text(self.vue.room_id)
             $("#visualization_div").show()
             callbackfunction = function(){
                 console.log("retrievedjsondata", self.vue.poll_data_admin_data_object)
@@ -511,7 +513,7 @@ $("#toggle_chart_viz").click(function(){
 
 $("#toggle_QR_viz").click(function(){
     //http://api.jquery.com/animate/
-    $("#room_QR").animate({
+    $("#enter_room_container").animate({
         height: "toggle"
     }, 500, "swing" , function(){
         //animation complete callback
