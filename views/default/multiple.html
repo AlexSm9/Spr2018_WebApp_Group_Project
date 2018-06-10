@@ -13,8 +13,9 @@
     
 </script>
 
-
+<div class="background_color" style="background-color: #9BB8A1;">
 <body>
+
     <div id="visualization_div" style="display:none">
         <h2 id="chart_main_title"></h2>
         <div class="button_container">
@@ -33,31 +34,41 @@
         </div>
     </div>
     <div id="vue-div">
-        <h3>Hello Vue!</h3>
+      <div class="container padded">
+
         <div v-if="page=='poll_create'">
-            <h3>Question</h3>
-            <input type="text" v-model="poll_create_question">
-            <h3>Choices</h3>
-            <div class="choices" v-for="(item, index) in poll_create_choices">
-                <div>
-                    <p>Choice: ${item.text}</p>
-                    <a class="btn rounded red small" v-on:click="create_remove_choice(index)">
-                        <i class="fa fa-trash fa-lg"></i>
-                    </a>
-                </div>
+          <div class="question_page center">
+            <h3 style="margin-top: 50px;">Question</h3>
+            <div class="question_bar half" style="margin-left: 480px;">
+              <span class="input">
+                <input type="text" v-model="poll_create_question">
+              </span>
             </div>
-            <input type="text" v-model="choice_create_text">
-            <button v-on:click="create_add_choice()">Create Choice</button>
-            <button v-on:click="create_poll">Create Poll</button>
+            <h3 style="margin-top: 70px;">Choices</h3>
+            <div class="choices" v-for="(item, index) in poll_create_choices">
+              <div class="question_page center">
+                <h6>${index+1}.${item.text}
+                  <a class="btn rounded red small" v-on:click="create_remove_choice(index)">
+                    <i class="fa fa-trash fa-lg"></i>
+                  </a>
+                </h6>
+              </div>
+            </div>
+            <div class="question_bar half" style="margin-left: 480px; margin-bottom: 50px;" >
+              <span class="input">
+                <input type="text" v-model="choice_create_text" >
+              </span>
+            </div>
+            <button class="btn" v-on:click="create_add_choice()" style="background-color: #4C8961">Add Choice</button>
+            <button class="btn" v-on:click="create_poll" style="background-color: #4C8961">Create Poll</button>
+          </div>
         </div>
         <div v-if="page=='poll_admin'">
-            <p>Poll Admin Page</p>
-            <button v-on:click="delete_poll()">Delete newly created poll? (temporary button)</button>
-            <button v-on:click="poll_toggle_open_status()">Toggle Poll Open Status (Default Closed)</button>
-            
-
-            
+          <p>Poll Admin Page</p>
+          <button v-on:click="delete_poll()">Delete newly created poll? (temporary button)</button>
+          <button v-on:click="poll_toggle_open_status()">Toggle Poll Open Status (Default Closed)</button>
         </div>
+
         <div v-if="page=='poll_answer'">
             <h3>Poll Answering</h3>
             <div>
@@ -75,11 +86,10 @@
         </div>
     </div>
     
-
     
 
 </body>
-
+</div>
 <!--These are for ease of testing with brackets.-->
 <link href="{{=URL('static', 'css/stupid.css')}}" rel="stylesheet"/>
 <link href="{{=URL('static', 'css/room.css')}}" rel="stylesheet"/>

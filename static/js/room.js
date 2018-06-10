@@ -303,8 +303,7 @@ var app = function() {
     self.remove_choice_from_choice_array = function(index_to_remove){
         self.vue.poll_create_choices.splice(index_to_remove, 1);
     }
-    
-    
+        
     //%%%%%%%%%%%%% END OTHER FUNCTIONS %%%%%%%%%%%%%
     
     self.vue = new Vue({
@@ -320,7 +319,7 @@ var app = function() {
             choice_create_text: "",
             poll_answer_choices: [],
             poll_data_admin_data_object: null,
-            chosen_poll_choice: null
+            chosen_poll_choice: null,
         },
         methods: {
             some_method: self.somemethod,
