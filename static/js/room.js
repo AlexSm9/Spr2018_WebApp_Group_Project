@@ -22,13 +22,19 @@ function PollCreationAnswerObject(text){
     this.text = text;
 }
 PollCreationAnswerObject.prototype.constructor = PollCreationAnswerObject;
-PollCreationAnswerObject.prototype.to_JSON = function(){
+PollCreationAnswerObject.prototype.to_JSON = function(optional_index=null){
+    if(optional_index !== null){
+        return {
+            text: this.text,
+            sort_index: optional_index,
+        }
+    }
     return {
         text: this.text
     };
 };
-PollCreationAnswerObject.prototype.to_JSON_string = function(){
-    return JSON.stringify(this.to_JSON())
+PollCreationAnswerObject.prototype.to_JSON_string = function(optional_index=null){
+    return JSON.stringify(this.to_JSON(optional_index))
 };
 
 //&&&
@@ -208,7 +214,7 @@ var app = function() {
     self.create_new_poll = function(){
         choices = [];
         for(var i = 0; i<self.vue.poll_create_choices.length; i++){
-            choices.push(self.vue.poll_create_choices[i].to_JSON_string());
+            choices.push(self.vue.poll_create_choices[i].to_JSON(i));
         }
         var parameters = {
             question: self.vue.poll_create_question,

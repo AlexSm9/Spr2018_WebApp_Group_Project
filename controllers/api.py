@@ -54,7 +54,8 @@ def save_poll_cjso(record, cjso):
 #++CreatePoll++
 def poll_choices_to_list():
     choice_list = json.loads(request.vars.choices)
-    return list(str(json.loads(item)["text"]) for item in choice_list)
+    print(choice_list)
+    return choice_list
 
 def create_poll():
     print("Recieved Question Text:")
@@ -64,8 +65,8 @@ def create_poll():
     print(choices)
     cjso = ChartJsonStringObject()
     cjso.set_question(request.vars.question)
-    for choice_string in choices:
-        cjso.add_choice(choice_string)
+    for choice in choices:
+        cjso.add_choice(str(choice["text"]))
     print(cjso)
     insert_result = db_insert_new_poll(cjso)
     if insert_result[0] is None:
