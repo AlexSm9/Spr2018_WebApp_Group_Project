@@ -43,6 +43,8 @@ PollCreationAnswerObject.prototype.to_JSON_string = function(optional_index=null
 var app = function() {
 
     var self = {};
+    
+    self.refreshinterval = null;
 
     Vue.config.silent = false; // show all warnings
 
@@ -158,6 +160,7 @@ var app = function() {
     self.handle_page_change = function(page_string){
 //        $("#visualization_div").hide()
         self.vue.page = page_string;
+        clearInterval(self.refreshinterval);
         if(page_string == "poll_create"){
             //do stuff
         } 
@@ -168,12 +171,9 @@ var app = function() {
             $("#room_id_div").attr("href", str_url);
             $("#room_id_number").text(self.vue.room_id)
             $("#visualization_div").show()
-            callbackfunction = function(){
-                console.log("retrievedjsondata", self.vue.poll_data_admin_data_object)
-                draw_bargraph(self.vue.poll_data_admin_data_object.to_JSON_string()); 
-            }
-            self.get_poll(callbackfunction);
-
+            
+            self.refresh_chart_data_admin();
+            self.refreshinterval = setInterval(self.refresh_chart_data_admin, 500);
         }
         else if(page_string == "poll_answer"){
             self.get_poll_choices();
@@ -315,16 +315,19 @@ var app = function() {
         $.post(get_poll_admin_api_url,
             parameters,
             function(data){
-                console.log("IN get_poll, DATA:", data);
                 //callback
                 self.vue.poll_data_admin_data_object = new ChartDataWrapper(data.poll_json);
-                console.log("RESULT OF GET_POLL", self.vue.poll_data_admin_data_object);
                 if(callbackfunction){
                     callbackfunction();
                 }
             }
         );
     };
+
+    self.refresh_chart_data_admin = function(){
+        var cb = function(){draw_bargraph(self.vue.poll_data_admin_data_object)};
+        self.get_poll(cb);
+    }
 
     self.edit_poll = function(){
         var parameters = {
@@ -607,26 +610,14 @@ function limit_text_length(string, max_length, ellipsis_limit=true){
 
 //+++++++++++++++++++++++++++
 
-//window.onload = function(){
-//    console.log("Page Reloaded");
-//    d3.select('p').text("Hello d3 selectors!");
-//    
-//    draw_bargraph(JSON_TEST_STRING);
-//        
-//};
 
-
-function draw_bargraph(json_datastring_test){
-    
-    CDW = new ChartDataWrapper(json_datastring_test);
-    
+function draw_bargraph(CDW){
+        
     d3.select('h2').text(CDW.question);
     
     var chart_main_width = clamp((CHART_WIDTH_AS_PERCENTAGE_OF_WINDOW*window.outerWidth), MAX_CHART_WIDTH, MIN_CHART_WIDTH);
     var chart_main_height = clamp((CHART_HEIGHT_AS_PERCENTAGE_OF_WINDOW*window.outerWidth), MAX_CHART_HEIGHT, MIN_CHART_HEIGHT);
-    
-    console.log("DIMENSIONS:", chart_main_width, chart_main_height)
-    
+        
     var chart_main_bar_width = chart_main_width/CDW.options.length;
     var chart_main_bar_padding = Math.max(1, (0.1)*chart_main_bar_width);
     
