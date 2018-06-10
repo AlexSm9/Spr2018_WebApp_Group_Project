@@ -315,10 +315,8 @@ var app = function() {
         $.post(get_poll_admin_api_url,
             parameters,
             function(data){
-                console.log("IN get_poll, DATA:", data);
                 //callback
                 self.vue.poll_data_admin_data_object = new ChartDataWrapper(data.poll_json);
-                console.log("RESULT OF GET_POLL", self.vue.poll_data_admin_data_object);
                 if(callbackfunction){
                     callbackfunction();
                 }
@@ -327,7 +325,6 @@ var app = function() {
     };
 
     self.refresh_chart_data_admin = function(){
-        console.log("refreshed poll data");
         var cb = function(){draw_bargraph(self.vue.poll_data_admin_data_object)};
         self.get_poll(cb);
     }
@@ -620,9 +617,7 @@ function draw_bargraph(CDW){
     
     var chart_main_width = clamp((CHART_WIDTH_AS_PERCENTAGE_OF_WINDOW*window.outerWidth), MAX_CHART_WIDTH, MIN_CHART_WIDTH);
     var chart_main_height = clamp((CHART_HEIGHT_AS_PERCENTAGE_OF_WINDOW*window.outerWidth), MAX_CHART_HEIGHT, MIN_CHART_HEIGHT);
-    
-    console.log("DIMENSIONS:", chart_main_width, chart_main_height)
-    
+        
     var chart_main_bar_width = chart_main_width/CDW.options.length;
     var chart_main_bar_padding = Math.max(1, (0.1)*chart_main_bar_width);
     
