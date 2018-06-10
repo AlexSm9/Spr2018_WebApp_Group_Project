@@ -98,7 +98,13 @@ var app = function() {
     
     function get_active_poll_administration_id_from_cookie(){
         //retrieve active administration id from cookie
-        var admin_id_cookie_dict = JSON.parse(self.from_cookie("current_room_admin_id"));
+        var admin_id_cookie_dict = null;
+        try{
+            admin_id_cookie_dict = JSON.parse(self.from_cookie("current_room_admin_id"));
+        }
+        catch{
+            admin_id_cookie_dict = self.from_cookie("current_room_admin_id");
+        }
         if(admin_id_cookie_dict===null){return null;}
         var id_from_cookie = admin_id_cookie_dict["a_id"];
         console.log("Retrieved room admin id:", id_from_cookie);
@@ -512,6 +518,13 @@ $("#toggle_chart_viz").click(function(){
 });
 
 $("#toggle_QR_viz").click(function(){
+    console.log("toggle_QR_viz is active", this.is_active)
+    if(this.is_active == true){
+        this.is_active = false; 
+    }else{
+        this.is_active = true; 
+        self.APP.toggle_accepting_answers(true);
+    }
     //http://api.jquery.com/animate/
     $("#enter_room_container").animate({
         height: "toggle"
