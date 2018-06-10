@@ -80,11 +80,13 @@ var app = function() {
             }
         }else{
             self.vue.room_id = r_id;
-            if(is_answered_poll_id_from_localstorage(r_id)){
-                return "poll_answer_confirmed";
-            }else{
-                return "poll_answer";
-            }
+//            if(is_answered_poll_id_from_localstorage(r_id)){
+//                return "poll_answer_confirmed";
+//            }else{
+//                return "poll_answer";
+//            }
+            handle_answer_cookie_to_determine_start_page(r_id);
+            return null;
         }
     }
     
@@ -132,9 +134,16 @@ var app = function() {
         return false;
     }
     
-    function is_answered_poll_id_from_localstorage(r_id){
+    function handle_answer_cookie_to_determine_start_page(r_id){
         //TODO: IMPLEMENT
-        return false;
+        var option_data = self.from_cookie(r_id);
+        console.log("getting choice from cookie:", r_id, option_data)
+        if(option_data == null){
+            self.handle_page_change("poll_answer");
+        }else{
+            self.vue.chosen_poll_choice = JSON.parse(option_data);
+            self.handle_page_change("poll_answer_confirmed");
+        }
     }
     
     self.handle_page_change = function(page_string){
@@ -220,6 +229,7 @@ var app = function() {
                 console.log("IN send_choice, DATA:", data);
                 self.handle_page_change("poll_answer_confirmed");
                 self.vue.chosen_poll_choice = choice;
+                self.add_to_cookie(self.vue.room_id, JSON.stringify(choice))
             }
         );
     };
@@ -236,6 +246,7 @@ var app = function() {
                 console.log("IN undo_choice, DATA:", data);
                 self.handle_page_change("poll_answer");
                 self.vue.chosen_poll_choice = null;
+                self.delete_cookie_key(self.vue.room_id);
             }
         );
     };
@@ -405,7 +416,7 @@ var app = function() {
     };
     
     self.delete_cookie_key = function(key){
-        //DOES NOT CURRENTLY WORK
+        //FIXME: DOES NOT CURRENTLY WORK
         var result = self.find_cookie();
         if (result != "") {
             console.log("deleting cookie:", result)
@@ -589,13 +600,13 @@ function limit_text_length(string, max_length, ellipsis_limit=true){
 
 //+++++++++++++++++++++++++++
 
-window.onload = function(){
-    console.log("Page Reloaded");
-    d3.select('p').text("Hello d3 selectors!");
-    
-    draw_bargraph(JSON_TEST_STRING);
-        
-};
+//window.onload = function(){
+//    console.log("Page Reloaded");
+//    d3.select('p').text("Hello d3 selectors!");
+//    
+//    draw_bargraph(JSON_TEST_STRING);
+//        
+//};
 
 
 function draw_bargraph(json_datastring_test){
