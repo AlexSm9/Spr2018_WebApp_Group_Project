@@ -314,6 +314,71 @@ var app = function() {
         self.vue.poll_create_choices.splice(index_to_remove, 1);
     }
     
+        //(%)(%)(%)(%) COOKIE FUNCTIONS (%)(%)(%)(%)
+    
+    //similar to get_cookie, but only returns the associated value from the JSON object, given a key
+    //key must be in the form of a string
+    self.from_cookie = function (key) {
+        var result = self.find_cookie();
+        if (result != "") {
+            var obj = JSON.parse(result);
+            return obj[key];
+        }
+        return null;
+    };
+    
+    //returns content of stored cookie (JSON string)
+    //from https://www.w3schools.com/js/js_cookies.asp
+    self.find_cookie = function () {
+        var name = "data=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for(var i = 0; i <ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    };
+    
+    //base code from https://www.w3schools.com/js/js_cookies.asp
+    //str should be a JSON string
+    self.write_string = function (str) {
+        var d = new Date();
+        //7 = number of days until cookie expires (can be changed as necessary)
+        d.setTime(d.getTime() + ((7)*24*60*60*1000));
+        expires = 'expires=' + d.toUTCString();
+        document.cookie = "data=" + str + ";" + expires + ";path=/";
+        console.log("Wrote cookie with content: " + str);
+    };
+    
+    self.add_to_cookie = function (key, value) {
+        var result = self.find_cookie();
+        if (result == "") {
+            var my_JSON = '{"' + key + '":' + value + '}';
+            console.log("Writing new cookie.");
+            console.log("key: '" + key + "', value: " + value);
+            self.write_string(my_JSON);
+        } else {
+            var obj = JSON.parse(result);
+            console.log("Adding to existing cookie: " + result);
+            console.log("key: '" + key + "', value: " + value);
+            obj[key] = value;
+            var my_JSON = JSON.stringify(obj);
+            self.write_string(my_JSON);
+        }
+    };
+    
+    self.delete_cookie = function () { self.vue.is_cookie = false; };
+    
+    
+        //(%)(%)(%)(%)(%)(%)(%)(%)(%)(%)(%)(%)(%)(%)
+    
+    
     
     //%%%%%%%%%%%%% END OTHER FUNCTIONS %%%%%%%%%%%%%
     
@@ -330,7 +395,9 @@ var app = function() {
             choice_create_text: "",
             poll_answer_choices: [],
             poll_data_admin_data_object: null,
-            chosen_poll_choice: null
+            chosen_poll_choice: null,
+            
+            is_cookie: false
         },
         methods: {
             some_method: self.somemethod,
@@ -340,7 +407,11 @@ var app = function() {
             delete_poll: self.delete_poll_by_current_admin_id,
             poll_send_choice: self.send_choice,
             poll_undo_choice: self.undo_choice,
-            poll_toggle_open_status: self.toggle_accepting_answers
+            poll_toggle_open_status: self.toggle_accepting_answers,
+            
+            from_cookie: self.from_cookie,
+            add_to_cookie: self.add_to_cookie,
+            delete_cookie: self.delete_cookie
         }
 
     });
