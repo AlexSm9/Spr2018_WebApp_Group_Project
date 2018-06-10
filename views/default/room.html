@@ -38,7 +38,6 @@
         </div>
     </div>
     <div id="vue-div">
-        <h3>Hello Vue!</h3>
         <div v-if="page=='poll_create'">
             <h3>Question</h3>
             <input type="text" v-model="poll_create_question">
@@ -60,30 +59,36 @@
             <button v-on:click="delete_poll()">Delete newly created poll? (temporary button)</button>
             <!--<p>Not required unless to test poll closure</p>            
             <button v-on:click="poll_toggle_open_status()">Toggle Poll Open Status (Default Closed)</button>
-            -->
-            
-
-            
+            --> 
         </div>
+
+
+
         <div v-if="page=='poll_answer'">
-            <h3>Poll Answering</h3>
-            <div>
-                <div v-for="choice in poll_answer_choices">
-                    <button v-on:click="poll_send_choice(choice)">${choice.text}</button>
+            <div class="question">
+                <p class="title_text" style="font-weight: normal; font-size: 200%; margin-bottom: 50px;">Enter Question Here</p>
+                <div>
+                    <div v-for="choice in poll_answer_choices">
+                        <div class="btnn center" v-on:click="poll_send_choice(choice)" style="width: 200px; margin-bottom: 20px;">
+                            <span>${choice.text}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <div v-if="page=='poll_answer_confirmed'">
-            <h3>Poll Answering</h3>
-            <div>
-                <p> You chose option: ${chosen_poll_choice.text}</p>
-                <button v-on:click="poll_undo_choice(chosen_poll_choice)">Undo Choice</button>
+            <div class="question">
+                <p class="title_text" style="font-weight: normal; font-size: 200%; margin-bottom: 20px;">Enter Question Here</p>
+                <div>
+                    <p class="title_text" style="font-weight: normal; font-size: 200%; margin-bottom: 20px;">You chose option: ${chosen_poll_choice.text}</p>
+                    <div class="btnn center" v-on:click="poll_undo_choice(chosen_poll_choice)" style="width: 200px; margin-bottom: 20px;">
+                            <span>Undo Choice</span>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    
 
-    
+    </div>
 
 </body>
 

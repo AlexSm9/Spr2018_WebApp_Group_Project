@@ -9,20 +9,10 @@ div.buttons {
     text-align: center;
 }
 
-div.button_create .btn{
-    font-size: 20px;
+div.button_index .btn{
+    font-size: 30px;
     background-color: #a0522d; 
     color: white;
-}
-
-div.button_answer .btn {
-    font-size: 20px;
-    background-color: #a0522d; 
-    color: white;
-}
-
-div.button_profile .btn {
-    font-size: 20px;
 }
 
 div.footer {
@@ -67,8 +57,6 @@ div.create_question {
 div.multiple_choice {
     padding: 5px;
     display: block;
-
-
 }
 
 div.elimination {
@@ -98,8 +86,7 @@ div.header_image{
   margin: 5px;
   height:150px;
   margin-top: 3s0px;
-background-color: #4C8961; 
-
+  background-color: #4C8961; 
 }
 
 .button span {
@@ -122,7 +109,6 @@ background-color: #4C8961;
   padding-right: 25px;
 }
 
-
 .button:hover span:after {
   opacity: 1;
   right: 0;
@@ -135,25 +121,21 @@ background-color: #4C8961;
 p.prompt_text {
     font-size: 300%;
     text-align: center;
-    font-style: oblique;
-    font-family: serif;
+    font-family: Verdana, Geneva, sans-serif;
     font-weight: bold;
 }
+
 p.title_text {
     font-size: 250%;
     text-align: center;
-    font-family: cursive;
+    font-family: Tahoma, Geneva, sans-serif;
     font-weight: bold;
     margin-top: 20px;
-
 }
-
 
 .btn {
     font-size: 24px;
 }
-
-
 
 .input {
   position:relative;
@@ -165,18 +147,18 @@ p.title_text {
   size: 300%;
 }
 
-
 #top, #bottom, #left, #right {
   position: fixed;
-  }
-  #left, #right {
+}
+
+ #left, #right {
     top: 0; bottom: 0;
     width: 500px;
+}
 
-    }
-    #left { left: 0; }
-    #right { right: 0; }
+#left { left: 0; }
 
+#right { right: 0; }
 
 div.btnn span {
   background: #FFF;
@@ -185,14 +167,17 @@ div.btnn span {
   border-radius: 5px;
   border: 2px solid #000;
 }
+
 div.btnn:hover {
   box-shadow: 0 2px 0 #000, 0 2px 0px 2px black;
 }
+
 div.btnn:active {
   top: 4px;
   padding-bottom: 0px;
   box-shadow: 0 1px 0 #000;
 }
+
 div.btnn {
   position: relative;
   font: normal 22px/25px "Patrick Hand", sans-serif;
