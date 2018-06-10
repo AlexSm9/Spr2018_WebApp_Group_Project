@@ -617,7 +617,9 @@ function draw_bargraph(json_datastring_test){
     
     var chart_main = d3.select("#chart_main")
         .attr("width", chart_main_width)
-        .attr("height", chart_main_height);
+        .attr("height", chart_main_height)
+        .style("overflow", "visible");
+
     
     var bar_pixel_heights = [];
     
