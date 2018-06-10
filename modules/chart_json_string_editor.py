@@ -30,10 +30,10 @@ class ChartJsonStringObject:
     def set_settings(self, settings_dictionary):
         self.settings = settings_dictionary
 
-    def add_choice(self, option, change_count_by_value=None):
+    def add_choice(self, option, change_count_by_value=None, optional_sort_index=None):
         if len(self.choices.keys())>OPTION_COUNT_HARD_LIMIT: return None #limit to not have unreasonably many options, if we want to increase this significantly, we should also correspondingly increase the length of the option_ids since there will be more collisions as the number of avaliable options grow
         if type(option) == str: #code to handle a literal question string passed as argument
-            option = self.QuestionOption(option)
+            option = self.QuestionOption(option, optional_sort_index)
         option._generate_option_id()
         while option.option_id in self.choices.keys(): #ensures uniqueness and not overwriting existing options
             option._generate_option_id()
@@ -83,11 +83,14 @@ class ChartJsonStringObject:
     def get_json(self):
         return self._wrap_self_as_json_object()
 
+    def get_unwrapped_choices_list(self):
+        return sorted(list(self.choices[key] for key in self.choices.keys()), key=lambda choice: choice.sort_index)
+    
     def get_choices_list(self):
-        return list(self.choices[key]._wrap_self_as_json_object() for key in self.choices.keys())
+        return list(choice._wrap_self_as_json_object() for choice in self.get_unwrapped_choices_list())
 
     def get_choices_list_no_results(self):
-        return list(self.choices[key]._wrap_self_as_simplified_json_object() for key in self.choices.keys())
+        return list(choice._wrap_self_as_simplified_json_object() for choice in self.get_unwrapped_choices_list())
     
     def increment_option_count(self, option_id, increment_amount=1, also_change_response_count=True):
         self._change_option_count(option_id, increment_amount, also_change_response_count)
@@ -130,25 +133,36 @@ class ChartJsonStringObject:
 
     class QuestionOption:
 
-        def __init__(self, option=None):
+        def __init__(self, option=None, optional_sort_index=None):
             if option is None:
                 #new object
                 self.text = None
                 self.option_id = None
                 self.count = 0
+                if optional_sort_index is not None:
+                    self.sort_index = optional_sort_index
+                else:
+                    self.sort_index = -1
             elif type(option) is str:
                 # new object with text included
                 self.text = option
                 self.option_id = None
                 self.count = 0
+                if optional_sort_index is not None:
+                    self.sort_index = optional_sort_index
+                else:
+                    self.sort_index = -1
             else:
                 # initialize from json object
                 self.text = option["text"]
                 self.option_id = option["option_id"]
                 self.count = option["results"]["count"]
+                self.sort_index = option["results"]["sort_idx"]
 
         def change_count(self, count_change):
             self.count += count_change
+            if self.count < 0:
+                self.count = 0
 
         def set_text(self, new_text):
             self.text = new_text
@@ -162,7 +176,8 @@ class ChartJsonStringObject:
 
         def _wrap_self_as_json_object(self):
             results = {
-                "count": self.count
+                "count": self.count,
+                "sort_idx": self.sort_index
             }
             return {
                 "text": self.text,

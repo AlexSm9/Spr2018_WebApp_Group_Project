@@ -22,13 +22,19 @@ function PollCreationAnswerObject(text){
     this.text = text;
 }
 PollCreationAnswerObject.prototype.constructor = PollCreationAnswerObject;
-PollCreationAnswerObject.prototype.to_JSON = function(){
+PollCreationAnswerObject.prototype.to_JSON = function(optional_index=null){
+    if(optional_index !== null){
+        return {
+            text: this.text,
+            sort_index: optional_index,
+        }
+    }
     return {
         text: this.text
     };
 };
-PollCreationAnswerObject.prototype.to_JSON_string = function(){
-    return JSON.stringify(this.to_JSON())
+PollCreationAnswerObject.prototype.to_JSON_string = function(optional_index=null){
+    return JSON.stringify(this.to_JSON(optional_index))
 };
 
 //&&&
@@ -59,20 +65,28 @@ var app = function() {
         var r_id = get_room_id_parameter(window.location.href)
         if(r_id==null){
             var existing_id = get_active_poll_administration_id_from_cookie();
-            if(existing_id != null){
-                if(verify_admin_key_and_retrieve_data(existing_id)){
-                    //TODO: IMPLEMENT
-                    return "poll_admin";
-                }
+//            if(existing_id != null){
+//                if(verify_admin_key_and_retrieve_data(existing_id)){
+//                    return "poll_admin";
+//                }
+//            }
+//            return "poll_create";
+            if(existing_id == null){
+                return "poll_create";
+            }else{
+                //this is done on a callback, so return null as page target
+                verify_admin_key_and_retrieve_data(existing_id);
+                return null;
             }
-            return "poll_create";
         }else{
             self.vue.room_id = r_id;
-            if(is_answered_poll_id_from_localstorage(r_id)){
-                return "poll_answer_confirmed";
-            }else{
-                return "poll_answer";
-            }
+//            if(is_answered_poll_id_from_localstorage(r_id)){
+//                return "poll_answer_confirmed";
+//            }else{
+//                return "poll_answer";
+//            }
+            handle_answer_cookie_to_determine_start_page(r_id);
+            return null;
         }
     }
     
@@ -84,19 +98,52 @@ var app = function() {
     
     function get_active_poll_administration_id_from_cookie(){
         //retrieve active administration id from cookie
-        //TODO: implement
-        return "";
+        console.log("Retrieved room admin id:", self.from_cookie("current_room_admin_id"));
+        return self.from_cookie("current_room_admin_id");
     }
+    
+//    function save_active_poll_administration_id_to_cookie(){
+//        //retrieve active administration id from cookie
+//    }
     
     function verify_admin_key_and_retrieve_data(existing_id){
         //send a post request to server asking if ID exists.
         //TODO: IMPLEMENT
+        console.log("existing_id", existing_id);
+        parameters = {
+            admin_id: existing_id
+        }
+        console.log("VERIFY_COOKIE PARAMS:", parameters);
+        $.post(get_poll_admin_api_url,
+            parameters,
+            function(data){
+                //callback
+                if(data.poll_json){
+                    var CDW = new ChartDataWrapper(data.poll_json);
+                    self.vue.poll_data_admin_data_object = CDW;
+                    self.vue.admin_id = CDW.UID;
+                    self.vue.room_id = data.room_id;
+                    self.handle_page_change("poll_admin");
+                }else{
+                    self.handle_page_change("poll_create");
+                }
+            }
+        )
+        
+       // self.vue.admin_id = existing_id;
         return false;
     }
     
-    function is_answered_poll_id_from_localstorage(r_id){
+    function handle_answer_cookie_to_determine_start_page(r_id){
         //TODO: IMPLEMENT
-        return false;
+        var option_data = self.from_cookie(r_id);
+        console.log("getting choice from cookie:", r_id, option_data)
+        if(option_data == null){
+            self.handle_page_change("poll_answer");
+        }else{
+            self.vue.chosen_poll_choice = JSON.parse(option_data);
+            self.handle_page_change("poll_answer_confirmed");
+        }
     }
     
     self.handle_page_change = function(page_string){
@@ -112,7 +159,7 @@ var app = function() {
             $("#visualization_div").show()
             callbackfunction = function(){
                 console.log("retrievedjsondata", self.vue.poll_data_admin_data_object)
-                draw_bargraph(self.vue.poll_data_admin_data_object.to_JSON_string()); //intentionally breaking this
+                draw_bargraph(self.vue.poll_data_admin_data_object.to_JSON_string()); 
             }
             self.get_poll(callbackfunction);
 
@@ -182,6 +229,7 @@ var app = function() {
                 console.log("IN send_choice, DATA:", data);
                 self.handle_page_change("poll_answer_confirmed");
                 self.vue.chosen_poll_choice = choice;
+                self.add_to_cookie(self.vue.room_id, JSON.stringify(choice))
             }
         );
     };
@@ -198,6 +246,7 @@ var app = function() {
                 console.log("IN undo_choice, DATA:", data);
                 self.handle_page_change("poll_answer");
                 self.vue.chosen_poll_choice = null;
+                self.delete_cookie_key(self.vue.room_id);
             }
         );
     };
@@ -208,7 +257,7 @@ var app = function() {
     self.create_new_poll = function(){
         choices = [];
         for(var i = 0; i<self.vue.poll_create_choices.length; i++){
-            choices.push(self.vue.poll_create_choices[i].to_JSON_string());
+            choices.push(self.vue.poll_create_choices[i].to_JSON(i));
         }
         var parameters = {
             question: self.vue.poll_create_question,
@@ -224,6 +273,7 @@ var app = function() {
                 self.vue.admin_id = data.admin_id;
                 self.vue.room_id = data.poll_id;
                 self.handle_page_change("poll_admin");
+                self.add_to_cookie("current_room_admin_id", JSON.stringify(data.admin_id));
             }
         );
     };
@@ -240,12 +290,13 @@ var app = function() {
                 //callback
                 self.vue.admin_id = null;
                 self.vue.room_id = null;
+                self.delete_cookie_key("current_room_admin_id");
                 self.handle_page_change("poll_create");
             }
         );
     };
     
-    self.get_poll = function(callbackfunction){
+    self.get_poll = function(callbackfunction=null){
         var parameters = {
             admin_id: self.vue.admin_id
         };
@@ -304,6 +355,77 @@ var app = function() {
         self.vue.poll_create_choices.splice(index_to_remove, 1);
     }
     
+        //(%)(%)(%)(%) COOKIE FUNCTIONS (%)(%)(%)(%)
+    
+    //similar to get_cookie, but only returns the associated value from the JSON object, given a key
+    //key must be in the form of a string
+    self.from_cookie = function (key) {
+        var result = self.find_cookie();
+        if (result != "") {
+            console.log("cookie result:", result)
+            var obj = JSON.parse(result);
+            return obj[key];
+        }
+        return null;
+    };
+    
+    //returns content of stored cookie (JSON string)
+    //from https://www.w3schools.com/js/js_cookies.asp
+    self.find_cookie = function () {
+        var name = "data=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for(var i = 0; i <ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    };
+    
+    //base code from https://www.w3schools.com/js/js_cookies.asp
+    //str should be a JSON string
+    self.write_string = function (str) {
+        var d = new Date();
+        //7 = number of days until cookie expires (can be changed as necessary)
+        d.setTime(d.getTime() + ((7)*24*60*60*1000));
+        expires = 'expires=' + d.toUTCString();
+        document.cookie = "data=" + str + ";" + expires + ";path=/";
+        console.log("Wrote cookie with content: " + str);
+    };
+    
+    self.add_to_cookie = function (key, value) {
+        var result = self.find_cookie();
+        if (result == "") {
+            var my_JSON = '{"' + key + '":' + value + '}';
+            console.log("Writing new cookie.");
+            console.log("key: '" + key + "', value: " + value);
+            self.write_string(my_JSON);
+        } else {
+            var obj = JSON.parse(result);
+            console.log("Adding to existing cookie: " + result);
+            console.log("key: '" + key + "', value: " + value);
+            obj[key] = value;
+            var my_JSON = JSON.stringify(obj);
+            self.write_string(my_JSON);
+        }
+    };
+    
+    self.delete_cookie_key = function(key){
+        self.add_to_cookie(key, null);
+        return;
+    }
+    
+    self.delete_cookie = function () { self.vue.is_cookie = false; };
+    
+    
+        //(%)(%)(%)(%)(%)(%)(%)(%)(%)(%)(%)(%)(%)(%)
+    
+    
     
     //%%%%%%%%%%%%% END OTHER FUNCTIONS %%%%%%%%%%%%%
     
@@ -320,7 +442,9 @@ var app = function() {
             choice_create_text: "",
             poll_answer_choices: [],
             poll_data_admin_data_object: null,
-            chosen_poll_choice: null
+            chosen_poll_choice: null,
+            
+            is_cookie: false
         },
         methods: {
             some_method: self.somemethod,
@@ -330,12 +454,19 @@ var app = function() {
             delete_poll: self.delete_poll_by_current_admin_id,
             poll_send_choice: self.send_choice,
             poll_undo_choice: self.undo_choice,
-            poll_toggle_open_status: self.toggle_accepting_answers
+            poll_toggle_open_status: self.toggle_accepting_answers,
+            
+            from_cookie: self.from_cookie,
+            add_to_cookie: self.add_to_cookie,
+            delete_cookie: self.delete_cookie
         }
 
     });
     
-    self.handle_page_change(determine_starting_page());
+    var start_page = determine_starting_page()
+    if(start_page!==null){
+        self.handle_page_change(start_page);
+    }
     console.log("STARTING PAGE", self.vue.page);
 
     $("#vue-div").show();
@@ -457,13 +588,13 @@ function limit_text_length(string, max_length, ellipsis_limit=true){
 
 //+++++++++++++++++++++++++++
 
-window.onload = function(){
-    console.log("Page Reloaded");
-    d3.select('p').text("Hello d3 selectors!");
-    
-    draw_bargraph(JSON_TEST_STRING);
-        
-};
+//window.onload = function(){
+//    console.log("Page Reloaded");
+//    d3.select('p').text("Hello d3 selectors!");
+//    
+//    draw_bargraph(JSON_TEST_STRING);
+//        
+//};
 
 
 function draw_bargraph(json_datastring_test){
@@ -486,7 +617,9 @@ function draw_bargraph(json_datastring_test){
     
     var chart_main = d3.select("#chart_main")
         .attr("width", chart_main_width)
-        .attr("height", chart_main_height);
+        .attr("height", chart_main_height)
+        .style("overflow", "visible");
+
     
     var bar_pixel_heights = [];
     
@@ -555,6 +688,8 @@ function draw_bargraph(json_datastring_test){
         .domain(CDW.get_option_text_array(OPTION_LABEL_TEXT_LENGTH_LIMIT)).range([0, chart_main_width]);
     
     var x_axis_bottom_object = d3.axisBottom(x_axis_scale_band)
+    
+    chart_main.selectAll("g").remove().exit();
     
     var x_axis = chart_main.append("g")
         .attr("class", "x-axis")

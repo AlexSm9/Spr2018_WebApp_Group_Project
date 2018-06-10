@@ -2,13 +2,15 @@
 function OptionDataWrapper(json_option){
     this.text = json_option["text"];
     this.count = json_option["results"]["count"];
+    this.sort_index = json_option["results"]["sort_idx"];
     this.option_id = json_option["option_id"];
     this._stored_bar_height_in_pixels = null;
 }
 OptionDataWrapper.prototype.constructor = OptionDataWrapper;
 OptionDataWrapper.prototype.to_JSON = function(){
     var this_json_results = {
-        "count": this.count
+        "count": this.count,
+        "sort_idx": this.sort_index
     };
     var this_json_dict = {
         "text": this.text,

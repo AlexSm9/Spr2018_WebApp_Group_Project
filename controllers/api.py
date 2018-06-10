@@ -54,7 +54,8 @@ def save_poll_cjso(record, cjso):
 #++CreatePoll++
 def poll_choices_to_list():
     choice_list = json.loads(request.vars.choices)
-    return list(str(json.loads(item)["text"]) for item in choice_list)
+    print(choice_list)
+    return choice_list
 
 def create_poll():
     print("Recieved Question Text:")
@@ -64,8 +65,8 @@ def create_poll():
     print(choices)
     cjso = ChartJsonStringObject()
     cjso.set_question(request.vars.question)
-    for choice_string in choices:
-        cjso.add_choice(choice_string)
+    for choice in choices:
+        cjso.add_choice(str(choice["text"]), None, choice["sort_index"])
     print(cjso)
     insert_result = db_insert_new_poll(cjso)
     if insert_result[0] is None:
@@ -130,7 +131,8 @@ def get_poll():
         if record.__class__ is SubFunctionError: return response.json(record.get_error_dict())
         cjso = get_poll_cjso(record)
         return response.json(dict(
-            poll_json = cjso.get_json_string()
+            poll_json = cjso.get_json_string(),
+            room_id = record.id
         ))
     except AttributeError:
         return response.json(dict(
