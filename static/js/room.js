@@ -113,10 +113,10 @@ var app = function() {
         parameters = {
             admin_id: existing_id
         }
+        console.log("VERIFY_COOKIE PARAMS:", parameters);
         $.post(get_poll_admin_api_url,
             parameters,
             function(data){
-                console.log("IN verify_admin_key_and_retrieve_data, DATA:", data);
                 //callback
                 if(data.poll_json){
                     var CDW = new ChartDataWrapper(data.poll_json);
