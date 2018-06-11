@@ -19,6 +19,11 @@
 
   <p class="title_text">My Polls</p>
 
+            
+    <div v-for="(item, index) in poll_cjso_array">
+        <p>${item.question}</p>        
+    </div>
+            
   <div  style="margin-left: 200px; margin-right: 200px;  border: 2px solid black;">
     <div class="container padded">
 			<div class="half polls compressible">
@@ -40,4 +45,6 @@
 	</div>
 </div>
 
+<script src="{{=URL('static', 'js/chart_data_wrapper.js')}}"></script>
+<script src="{{=URL('static', 'js/barchart.js')}}"></script>
 <script src="{{=URL('static', 'js/default_question.js')}}"></script>

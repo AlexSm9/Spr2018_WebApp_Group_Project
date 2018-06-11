@@ -57,7 +57,19 @@ var app = function() {
     }
     
     self.get_user_polls = function(){
-        
+        var parameters = {};
+        $.post(assign_user_to_all_cookie_saved_polls_api_url,
+            parameters,
+            function(data){
+                //callback
+                console.log("IN get_user_polls, DATA:", data);
+                self.vue.poll_cjso_array = []
+                recieved_arr = data.user_polls;
+                for(var i=0; i<recieved_arr.length; i++){
+                    self.vue.poll_cjso_array.push(new ChartDataWrapper(recieved_arr[i]));
+                } 
+            }
+        );
     }
     
             //(%)(%)(%)(%) COOKIE FUNCTIONS (%)(%)(%)(%)
