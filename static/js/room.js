@@ -367,9 +367,13 @@ var app = function() {
     //poll creator function
     
     self.create_new_poll = function(){
-        choices = [];
+        var choices = [];
         for(var i = 0; i<self.vue.poll_create_choices.length; i++){
             choices.push(self.vue.poll_create_choices[i].to_JSON(i));
+        }
+        if(choices.length<=0){
+            alert("Please make at least one option for your poll.");
+            return;
         }
         var parameters = {
             question: self.vue.poll_question,
