@@ -1,0 +1,39 @@
+{{extend 'layout.html'}}
+
+{{block head}}
+
+<script src="{{=URL('static', 'js/vue.js')}}"></script>
+<script>
+  var get_question_url = "{{=URL('api', 'get_question')}}";
+  //final version of this api call will be made with address/identifier of associated db row as argument
+
+  //var answer_url
+  //This call will return id of user answer to the database before user is redirected to answer page
+</script>
+{{end}}
+
+<div class="background_color" style="background-color: #9BB8A1;">
+<!--Code for answering a question-->
+<div class="main_content">
+
+    <div id="vue-div" class="display:none">
+        
+        <div class="question">
+
+            <p class="prompt_text">Question:</p>
+
+            <p class="title_text" style="font-weight: normal; font-size: 200%; margin-bottom: 50px;">Enter Question Here</p>
+
+            <div v-for="ans in answers" class="answer">
+                <!-- Link will have option id, amount to imcrement comment, timestamp -->
+                <div href="" class="btnn center" style="width: 200px; margin-bottom: 20px;"><span>${ans}</span></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+</div>
+
+<script src="{{=URL('static', 'js/default_question.js')}}"></script>
