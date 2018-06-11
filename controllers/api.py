@@ -167,7 +167,7 @@ def reassign_poll_creator():
         return response.json(dict(
             error="empty_request_variable"
         ))
-    if not auth.user:
+    if auth.user is None:
         return response.json(dict(
             error="not_signed_in"
         ))
@@ -176,13 +176,29 @@ def reassign_poll_creator():
     altered_admin_ids_can_be_removed_from_cookie = []
     for admin_id in admin_id_array:
         found_poll = get_poll_by_admin_id(admin_id)
-        if not found_poll: continue
+        if not found_poll:
+            print("Poll with id:", admin_id, "not found.")
+            altered_admin_ids_can_be_removed_from_cookie.append(admin_id)
+            continue
         found_poll.creator = user_email
-        altered_admin_ids_can_be_removed_from_cookie.append(admin_id)
+        try:
+            found_poll.update_record()
+            altered_admin_ids_can_be_removed_from_cookie.append(admin_id)
+        except(AttributeError):
+            continue
     return response.json(dict(
         can_be_removed_from_cookie = altered_admin_ids_can_be_removed_from_cookie
     ))
 
+def get_logged_in_user_polls():
+    if auth.user is None:
+        return response.json(dict(
+            error="not_signed_in"
+        ))
+    user_poll_records = db(db.polls.creator == auth.user.email).select(orderby=~db.polls.id)
+    return response.json(dict(
+        user_polls=list(record.poll_json for record in user_poll_records)
+    ))
 
 
 #------ Answerer Functions ------
