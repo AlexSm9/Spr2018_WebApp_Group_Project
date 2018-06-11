@@ -188,7 +188,8 @@ def get_choices():
     if record.__class__ is SubFunctionError: return response.json(record.get_error_dict())
     cjso = get_poll_cjso(record)
     return response.json(dict(
-        choices=cjso.get_choices_list_no_results()
+        choices=cjso.get_choices_list_no_results(),
+        question=cjso.question
     ))
 
 def send_choice():

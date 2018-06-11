@@ -104,7 +104,7 @@ var app = function() {
         try{
             admin_id_cookie_dict = JSON.parse(self.from_cookie("current_room_admin_id"));
         }
-        catch{
+        catch(some_error){
             admin_id_cookie_dict = self.from_cookie("current_room_admin_id");
         }
         if(admin_id_cookie_dict===null){return null;}
@@ -224,6 +224,7 @@ var app = function() {
                 console.log("IN get_poll_choices_api_url, DATA:", data);
                 if(process_error(data)){return;}
                 self.vue.poll_answer_choices = data.choices;
+                self.vue.poll_question = data.question;
             }
         );
     };
@@ -271,7 +272,7 @@ var app = function() {
             choices.push(self.vue.poll_create_choices[i].to_JSON(i));
         }
         var parameters = {
-            question: self.vue.poll_create_question,
+            question: self.vue.poll_question,
             choices: JSON.stringify(choices)
         };
         console.log(parameters);
@@ -453,7 +454,7 @@ var app = function() {
             admin_id: null,
             page: null,
             poll_create_choices: [],
-            poll_create_question: "",
+            poll_question: "",
             choice_create_text: "",
             poll_answer_choices: [],
             poll_data_admin_data_object: null,
