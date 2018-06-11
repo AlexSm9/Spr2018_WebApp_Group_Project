@@ -79,7 +79,6 @@
             <div class="button_container center">
                 <button class="btn rounded" v-on:click="close_poll()" style="background-color: #a0522d; height: 50px; width:200px; font-size: 110%;">Close Poll</button>
             </div>
-            <p>Poll Admin Page</p>
             <button v-on:click="delete_poll()">Delete newly created poll? (temporary button)</button>
             <!--<p>Not required unless to test poll closure</p>            
             <button v-on:click="poll_toggle_open_status()">Toggle Poll Open Status (Default Closed)</button>
@@ -91,6 +90,13 @@
             <h3>This Poll is Currently Not Open</h3>
             <h5>Please reload the page when the poll opens.</h5>
             <button class="btn large red" onclick="location.reload()">Reload</button>
+        </div>
+        
+        <div v-if="page=='view_results_admin'">
+            <button class="btn large red" onclick="location.href='.'">Create or answer a new poll.</button>
+        </div>
+        <div v-if="page=='view_results'">
+            <button class="btn large red" onclick="location.href='.'">Create or answer a new poll.</button>
         </div>
 
         <div v-if="page=='poll_answer'">
