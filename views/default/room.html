@@ -23,7 +23,7 @@
     <div id="visualization_div" style="display:none">
         <h2 id="chart_main_title"></h2>
         <div class="button_container">
-            <button class="btn togglebutton rounded" id="toggle_chart_viz" style="    background-color: #a0522d; height: 50px; width:200px; font-size: 130%;">Hide/Show Chart</button>
+            <button class="btn togglebutton rounded" id="toggle_chart_viz" style="    background-color: #a0522d; height: 50px; width:200px; font-size: 100%;">Hide/Show Chart</button>
         </div>
         <div id="chart_container">
             <svg id="chart_main" style="padding-bottom:150;box-sizing: content-box"></svg>
@@ -46,7 +46,7 @@
         <div v-if="page=='poll_create'">
             <div class="question_page center">
                 <h3 style="margin-top: 50px;">Question</h3>
-                <div class="question_bar half" style="margin-left: 470px;">
+                <div class="question_bar half">
                     <span class="input">
                         <input type="text" v-model="poll_question">
                     </span>
@@ -61,7 +61,7 @@
                         </h6>
                     </div>
                 </div>
-                <div class="question_bar half" style="margin-left: 470px; margin-bottom: 50px;" >
+                <div class="question_bar half" style="margin-bottom: 50px;" >
                     <span class="input">
                         <input type="text" v-model="choice_create_text">
                     </span>
@@ -79,7 +79,6 @@
             <div class="button_container center">
                 <button class="btn rounded" v-on:click="close_poll()" style="background-color: #a0522d; height: 50px; width:200px; font-size: 110%;">Close Poll</button>
             </div>
-<!--            <button v-on:click="delete_poll()">Delete newly created poll? (temporary button)</button>-->
             <!--<p>Not required unless to test poll closure</p>            
             <button v-on:click="poll_toggle_open_status()">Toggle Poll Open Status (Default Closed)</button>
             --> 
