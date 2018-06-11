@@ -54,7 +54,7 @@
                 <h3 style="margin-top: 70px;">Choices</h3>
                 <div class="choices" v-for="(item, index) in poll_create_choices">
                     <div class="question_page center">
-                        <h6>${index+1}.${item.text} 
+                        <h6>${index+1}. ${item.text} 
                             <a class="btn rounded black small" v-on:click="create_remove_choice(index)">
                                 <i class="fa fa-trash fa-lg"></i>
                             </a>
