@@ -94,6 +94,16 @@ def creator_get_poll_record():
         return SubFunctionError("poll_not_found")
     return record
 
+def answerer_get_poll_record():
+    request_poll_id = request.vars.poll_id
+    if request_poll_id is None:
+        return SubFunctionError("id_not_provided")
+    record = get_poll_by_poll_id(request_poll_id)
+    if record is None:
+        #No Poll With This ID Exists
+        return SubFunctionError("poll_not_found")
+    return record
+
         
 def delete_poll():
     try:
@@ -133,6 +143,19 @@ def get_poll():
         return response.json(dict(
             poll_json = cjso.get_json_string(),
             room_id = record.id
+        ))
+    except AttributeError:
+        return response.json(dict(
+            error="failed_get_poll"
+        ))
+
+def answerer_get_poll_results():
+    try:
+        record = answerer_get_poll_record()
+        if record.__class__ is SubFunctionError: return response.json(record.get_error_dict())
+        cjso = get_poll_cjso(record)
+        return response.json(dict(
+            poll_json = cjso.get_public_json_string()
         ))
     except AttributeError:
         return response.json(dict(
