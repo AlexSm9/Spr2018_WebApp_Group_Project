@@ -11,6 +11,9 @@
     var edit_poll_admin_api_url = "{{=URL('api', 'edit_poll')}}";
     var toggle_answer_accept_admin_api_url = "{{=URL('api', 'toggle_accepting_answers')}}";
     
+    var assign_user_to_all_cookie_saved_polls_api_url = "{{=URL('api', 'reassign_poll_creator')}}";
+    
+    
 </script>
 
 
@@ -78,7 +81,7 @@
         </div>
         <div v-if="page=='poll_answer_confirmed'">
             <div class="question">
-                <p class="title_text" style="font-weight: normal; font-size: 200%; margin-bottom: 20px;">Enter Question Here</p>
+                <p class="title_text" style="font-weight: normal; font-size: 200%; margin-bottom: 20px;">${poll_question}</p>
                 <div>
                     <p class="title_text" style="font-weight: normal; font-size: 200%; margin-bottom: 20px;">You chose option: ${chosen_poll_choice.text}</p>
                     <div class="btnn center" v-on:click="poll_undo_choice(chosen_poll_choice)" style="width: 200px; margin-bottom: 20px;">

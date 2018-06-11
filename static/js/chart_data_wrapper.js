@@ -26,7 +26,14 @@ OptionDataWrapper.prototype.modify_count = function(modification_value){
 function ChartDataWrapper(string_data){
     var dataobject = JSON.parse(string_data);
     this.question = dataobject["Question"];
-    this.UID = dataobject["UID"];
+    //try-catch for public poll results after poll completes
+    try{
+        this.UID = dataobject["UID"];
+    }
+    catch(some_error){
+        //might be better to change to empty string, we'll see how this works in practice
+        this.UID = null;
+    }
     this.options = [];
     for(var i = 0; i<dataobject["Choices"].length; i++){
         this.options.push(new OptionDataWrapper(dataobject["Choices"][i]));

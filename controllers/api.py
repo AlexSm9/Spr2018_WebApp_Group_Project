@@ -94,6 +94,16 @@ def creator_get_poll_record():
         return SubFunctionError("poll_not_found")
     return record
 
+def answerer_get_poll_record():
+    request_poll_id = request.vars.poll_id
+    if request_poll_id is None:
+        return SubFunctionError("id_not_provided")
+    record = get_poll_by_poll_id(request_poll_id)
+    if record is None:
+        #No Poll With This ID Exists
+        return SubFunctionError("poll_not_found")
+    return record
+
         
 def delete_poll():
     try:
@@ -138,6 +148,19 @@ def get_poll():
         return response.json(dict(
             error="failed_get_poll"
         ))
+
+def answerer_get_poll_results():
+    try:
+        record = answerer_get_poll_record()
+        if record.__class__ is SubFunctionError: return response.json(record.get_error_dict())
+        cjso = get_poll_cjso(record)
+        return response.json(dict(
+            poll_json = cjso.get_public_json_string()
+        ))
+    except AttributeError:
+        return response.json(dict(
+            error="failed_get_poll"
+        ))
         
 def edit_poll():
     record = creator_get_poll_record()
@@ -161,8 +184,44 @@ def edit_poll():
 
 
         
+def reassign_poll_creator():
+    given_polls_dict = request.vars.saved_user_polls_array
+    if not given_polls_dict:
+        return response.json(dict(
+            error="empty_request_variable"
+        ))
+    if auth.user is None:
+        return response.json(dict(
+            error="not_signed_in"
+        ))
+    user_email = auth.user.email
+    admin_id_array = given_polls_dict["admin_id_array"]
+    altered_admin_ids_can_be_removed_from_cookie = []
+    for admin_id in admin_id_array:
+        found_poll = get_poll_by_admin_id(admin_id)
+        if not found_poll:
+            print("Poll with id:", admin_id, "not found.")
+            altered_admin_ids_can_be_removed_from_cookie.append(admin_id)
+            continue
+        found_poll.creator = user_email
+        try:
+            found_poll.update_record()
+            altered_admin_ids_can_be_removed_from_cookie.append(admin_id)
+        except(AttributeError):
+            continue
+    return response.json(dict(
+        can_be_removed_from_cookie = altered_admin_ids_can_be_removed_from_cookie
+    ))
 
-
+def get_logged_in_user_polls():
+    if auth.user is None:
+        return response.json(dict(
+            error="not_signed_in"
+        ))
+    user_poll_records = db(db.polls.creator == auth.user.email).select(orderby=~db.polls.id)
+    return response.json(dict(
+        user_polls=list(record.poll_json for record in user_poll_records)
+    ))
 
 
 #------ Answerer Functions ------

@@ -77,6 +77,9 @@ class ChartJsonStringObject:
         memodict[id(cjso_copy)] = cjso_copy
         return cjso_copy
 
+    def get_public_json_string(self):
+        return json.dumps(self._wrap_self_as_public_json_object())
+
     def get_json_string(self):
         return json.dumps(self._wrap_self_as_json_object())
 
@@ -105,6 +108,14 @@ class ChartJsonStringObject:
         return {
             "Question": self.question,
             "UID": self.uid,
+            "Settings": self.settings,
+            "Meta": self.meta,
+            "Choices": self.get_choices_list()
+        }
+
+    def _wrap_self_as_public_json_object(self):
+        return {
+            "Question": self.question,
             "Settings": self.settings,
             "Meta": self.meta,
             "Choices": self.get_choices_list()
