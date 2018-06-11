@@ -306,6 +306,8 @@ var app = function() {
     };
     
     self.send_choice = function(choice){
+        if(self.vue.input_hold === true){return;}
+        self.vue.input_hold = true;
         var parameters = {
             option_id: choice.option_id,
             poll_id: self.vue.room_id
@@ -314,6 +316,7 @@ var app = function() {
             parameters,
             function(data){
                 //callback
+                self.vue.input_hold = false;
                 console.log("IN send_choice, DATA:", data);
                 if(process_error(data)){return;}
                 self.handle_page_change("poll_answer_confirmed");
@@ -324,6 +327,8 @@ var app = function() {
     };
     
     self.undo_choice = function(choice){
+        if(self.vue.input_hold === true){return;}
+        self.vue.input_hold = true;
         var parameters = {
             option_id: choice.option_id,
             poll_id: self.vue.room_id
@@ -332,6 +337,7 @@ var app = function() {
             parameters,
             function(data){
                 //callback
+                self.vue.input_hold = false;
                 console.log("IN undo_choice, DATA:", data);
                 self.handle_page_change("poll_answer");
                 self.vue.chosen_poll_choice = null;
@@ -574,7 +580,8 @@ var app = function() {
             poll_data_admin_data_object: null,
             chosen_poll_choice: null,
             
-            is_cookie: false
+            is_cookie: false,
+            input_hold: false,
         },
         methods: {
             some_method: self.somemethod,
