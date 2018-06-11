@@ -40,7 +40,7 @@
     <div id="vue-div">
         <div v-if="page=='poll_create'">
             <h3>Question</h3>
-            <input type="text" v-model="poll_create_question">
+            <input type="text" v-model="poll_question">
             <h3>Choices</h3>
             <div class="choices" v-for="(item, index) in poll_create_choices">
                 <div>
