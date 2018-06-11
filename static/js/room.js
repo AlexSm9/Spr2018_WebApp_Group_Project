@@ -249,6 +249,7 @@ var app = function() {
             self.handle_page_change("view_results");            
         }
         else if(page_string == "poll_not_open"){
+            console.log("in page_string_poll_not_open, vue page is", self.vue.page);
         }
         else if(page_string == "view_results"){
             //TODO: REFRESH CHART USING USER DATA
@@ -314,6 +315,7 @@ var app = function() {
             function(data){
                 //callback
                 console.log("IN send_choice, DATA:", data);
+                if(process_error(data)){return;}
                 self.handle_page_change("poll_answer_confirmed");
                 self.vue.chosen_poll_choice = choice;
                 self.add_to_cookie(self.vue.room_id, JSON.stringify(choice))

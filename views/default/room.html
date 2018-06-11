@@ -87,7 +87,11 @@
             </div>
         </div>
 
-
+        <div v-if="page=='poll_not_open'">
+            <h3>This Poll is Currently Not Open</h3>
+            <h5>Please reload the page when the poll opens.</h5>
+            <button class="btn large red" onclick="location.reload()">Reload</button>
+        </div>
 
         <div v-if="page=='poll_answer'">
             <div class="question_page center">
@@ -115,6 +119,9 @@
                 </div>
             </div>
         </div>
+            
+
+        
     </div>
 
     </div>
