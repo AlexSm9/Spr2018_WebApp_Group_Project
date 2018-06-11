@@ -39,8 +39,9 @@ var app = function() {
                 }
             }
         );
+    }
         
-        function remove_admin_id_from_user_saved_polls_array_in_cookie(admin_id){
+    function remove_admin_id_from_user_saved_polls_array_in_cookie(admin_id){
         var existing_cookie;
         try{
             existing_cookie = JSON.parse(self.from_cookie("saved_user_polls_array"));
@@ -151,7 +152,7 @@ var app = function() {
             is_cookie: false,
             question: null,
             answers: [],
-            poll_cjso_array = []
+            poll_cjso_array: []
         },
         methods: {
             get_user_polls: self.get_user_polls,
@@ -163,6 +164,7 @@ var app = function() {
     });
 
 //    self.get_question();
+    //self.assign_user_to_all_cookie_saved_polls();
     $("#vue-div").show();
 
     return self;
