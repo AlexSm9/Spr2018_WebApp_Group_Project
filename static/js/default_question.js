@@ -24,6 +24,38 @@ var app = function() {
 //        })
 //    };
     
+    self.assign_user_to_all_cookie_saved_polls = function(){
+        var parameters = {
+            saved_user_polls_array: self.from_cookie("saved_user_polls_array")
+        };
+        $.post(assign_user_to_all_cookie_saved_polls_api_url,
+            parameters,
+            function(data){
+                //callback
+                console.log("IN assign_user_to_all_cookie_saved_polls, DATA:", data);
+                recieved_arr = data.can_be_removed_from_cookie;
+                for(var i=0; i<recieved_arr.length;i++){
+                    remove_admin_id_from_user_saved_polls_array_in_cookie(recieved_arr[i]);
+                }
+            }
+        );
+        
+        function remove_admin_id_from_user_saved_polls_array_in_cookie(admin_id){
+        var existing_cookie;
+        try{
+            existing_cookie = JSON.parse(self.from_cookie("saved_user_polls_array"));
+        }
+        catch(some_error){
+            existing_cookie = self.from_cookie("saved_user_polls_array");
+        }
+        if(existing_cookie!==null){
+            for(var i = existing_cookie["admin_id_array"].length-1; i>=0; i--){
+                existing_cookie["admin_id_array"].splice(i, 1);
+            }
+            self.add_to_cookie("saved_user_polls_array", JSON.stringify(existing_cookie));
+        }
+    }
+    
     self.get_user_polls = function(){
         
     }
@@ -106,7 +138,8 @@ var app = function() {
         data: {
             is_cookie: false,
             question: null,
-            answers: []
+            answers: [],
+            poll_cjso_array = []
         },
         methods: {
             get_user_polls: self.get_user_polls,
