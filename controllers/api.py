@@ -200,7 +200,7 @@ def reassign_poll_creator():
     except:
         print("!IMPORTANT PRINT FOLLOWS:")
         print(given_polls_dict)
-        admin_id_array = given_polls_dict.itervalues()[0]
+        admin_id_array = json.dumps(str(given_polls_dict))["admin_id_array"]
         print("!IMPORTANT PRINT2 FOLLOWS:")
         print(admin_id_array)
     altered_admin_ids_can_be_removed_from_cookie = []
