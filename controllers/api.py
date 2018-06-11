@@ -183,7 +183,7 @@ def edit_poll():
         return response.json(save_result)
 
 
-        
+@auth.requires_login()        
 def reassign_poll_creator():
     given_polls_dict = request.vars.saved_user_polls_array
     if not given_polls_dict:
@@ -213,6 +213,7 @@ def reassign_poll_creator():
         can_be_removed_from_cookie = altered_admin_ids_can_be_removed_from_cookie
     ))
 
+@auth.requires_login()
 def get_logged_in_user_polls():
     if auth.user is None:
         return response.json(dict(
