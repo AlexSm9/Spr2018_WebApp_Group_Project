@@ -491,6 +491,13 @@ var app = function() {
         self.vue.poll_create_choices.splice(index_to_remove, 1);
     }
     
+    self.navigate_to_index = function(){
+        self.delete_cookie_key("current_room_admin_id");
+        self.vue.poll_create_choices = [];
+        self.vue.poll_question = "";
+        window.location.replace(".");
+    }
+    
         //(%)(%)(%)(%) COOKIE FUNCTIONS (%)(%)(%)(%)
     
     //similar to get_cookie, but only returns the associated value from the JSON object, given a key
@@ -596,7 +603,8 @@ var app = function() {
             
             from_cookie: self.from_cookie,
             add_to_cookie: self.add_to_cookie,
-            delete_cookie: self.delete_cookie
+            delete_cookie: self.delete_cookie,
+            go_home: self.navigate_to_index
         }
 
     });
