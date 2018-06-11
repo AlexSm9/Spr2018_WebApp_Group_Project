@@ -157,6 +157,55 @@ var app = function() {
         }
     }
     
+    function add_admin_id_to_user_saved_polls_array_in_cookie(admin_id){
+        var existing_cookie;
+        try{
+            existing_cookie = JSON.parse(self.from_cookie("saved_user_polls_array"));
+        }
+        catch(some_error){
+            existing_cookie = self.from_cookie("saved_user_polls_array");
+        }
+        if(existing_cookie === null){
+            var arr = [];
+            arr.push(admin_id);
+            existing_cookie = {
+                admin_id_array: arr
+            }
+        }else{
+            existing_cookie["admin_id_array"].push(admin_id);
+        }
+        self.add_to_cookie("saved_user_polls_array", JSON.stringify(existing_cookie));
+    }
+    
+    function remove_admin_id_from_user_saved_polls_array_in_cookie(admin_id){
+        var existing_cookie;
+        try{
+            existing_cookie = JSON.parse(self.from_cookie("saved_user_polls_array"));
+        }
+        catch(some_error){
+            existing_cookie = self.from_cookie("saved_user_polls_array");
+        }
+        if(existing_cookie!==null){
+            for(var i = existing_cookie["admin_id_array"].length-1; i>=0; i--){
+                existing_cookie["admin_id_array"].splice(i, 1);
+            }
+            self.add_to_cookie("saved_user_polls_array", JSON.stringify(existing_cookie));
+        }
+    }
+    
+    self.assign_user_to_all_cookie_saved_polls = function(){
+        var parameters = {
+            saved_user_polls_array: self.from_cookie("saved_user_polls_array")
+        };
+        $.post(assign_user_to_all_cookie_saved_polls_api_url,
+            parameters,
+            function(data){
+                //callback
+                console.log("IN assign_user_to_all_cookie_saved_polls, DATA:", data);
+            }
+        );
+    }
+    
     self.handle_page_change = function(page_string){
 //        $("#visualization_div").hide()
         self.vue.page = page_string;
@@ -174,6 +223,7 @@ var app = function() {
             
             self.refresh_chart_data_admin();
             self.refreshinterval = setInterval(self.refresh_chart_data_admin, 500);
+            add_admin_id_to_user_saved_polls_array_in_cookie(self.vue.admin_id);
         }
         else if(page_string == "poll_answer"){
             self.get_poll_choices();
@@ -301,10 +351,15 @@ var app = function() {
             function(data){
                 console.log("IN delete_poll, DATA:", data);
                 //callback
+            
+                //This deletes poll from cookies after deleting it from db, useful for testing this function
+                remove_admin_id_from_user_saved_polls_array_in_cookie(self.vue.admin_id);
+            
                 self.vue.admin_id = null;
                 self.vue.room_id = null;
                 self.delete_cookie_key("current_room_admin_id");
                 self.handle_page_change("poll_create");
+            
             }
         );
     };

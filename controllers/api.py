@@ -161,7 +161,10 @@ def edit_poll():
 
 
         
-
+def reassign_poll_creator():
+    return response.json(dict(
+        error="API_FUNCTION_NOT_IMPLEMENTED"
+    ))
 
 
 
