@@ -11,7 +11,7 @@
 </script>
 {{end}}
 
-<div class="background_color" style="background-color: #F8EBE3; padding-bottom: 220px;">
+<div class="background_color" style="background-color: #F8EBE3; padding-bottom: 500px;">
 
 {{if auth.user is not None:}}
     
@@ -31,12 +31,34 @@
 
 <div class="enter_roomcode">
     <div id="vue-div">
-        <div v-for="(item, index) in poll_cjso_array">
+<!--         <div v-for="(item, index) in poll_cjso_array">
             <div v-on:click="visualize_poll_data(item)">
                 <p>${item.question}</p>
             </div>
-        </div>
-    </div> 
+        </div> -->
+      <div  style="margin-left: 200px; margin-right: 200px;  border: 2px solid black;">
+
+            <div class="container padded">
+                <div class="twoquarters polls compressible">
+                    <div v-for="(item, index) in poll_cjso_array">
+                        <div v-on:click="visualize_poll_data(item)">
+                            <div class="question center" style="font-weight: bold; font-size: 200%;">${item.question}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="half button_list compressible" style="float:right;margin-top: 20px;">
+    <!--                 <div class="buttons" style="margin-left: 30%;" > 
+                        <div class = "btn rounded" style="padding: 10px;">
+                            <i class="fa fa-heart"></i>
+                        </div>  
+                        <div class="btn rounded" style="padding: 10px;">    
+                            <i class="fa fa-trash-o" ></i>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </div> 
+    </div>
 </div>
     
 {{else:}}
