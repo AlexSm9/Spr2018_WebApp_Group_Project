@@ -13,16 +13,35 @@
 
 <div class="background_color" style="background-color: #F8EBE3; height:400px;">
 
+{{if auth.user is not None:}}
+    
+    
 <p class="title_text">My Polls</p>
+
+<div id="visualization_div">
+    <h2 id="chart_main_title"></h2>
+    <div id="chart_container">
+        <svg id="chart_main" style="padding-bottom:150;box-sizing: content-box"></svg>
+        <!--box-sizing: content-box style is there because stupid.css wants to overwrite it with something else by default-->
+    </div>
+    <button class="btn togglebutton rounded" id="toggle_chart_viz" style="    background-color: #a0522d; height: 50px; width:200px; font-size: 130%;">Hide/Show Chart</button>
+
+</div>
 
 
 <div class="enter_roomcode">
     <div id="vue-div">
         <div v-for="(item, index) in poll_cjso_array">
-            <p>${item.question}</p>        
+            <div v-on:click="visualize_poll_data(item)">
+                <p>${item.question}</p>
+            </div>
         </div>
     </div> 
 </div>
+    
+{{else:}}
+<h3>Please log in to see your polls.</h3>
+{{pass}}
 
 
             
@@ -49,6 +68,10 @@
 </div>
 -->
 
+<script src="{{=URL('static', 'js/d3.v5.js')}}"></script>
+<script src="{{=URL('static', 'js/davidshimjs-qrcodejs-04f46c6/jquery.min.js')}}"></script>
 <script src="{{=URL('static', 'js/chart_data_wrapper.js')}}"></script>
 <script src="{{=URL('static', 'js/barchart.js')}}"></script>
 <script src="{{=URL('static', 'js/default_question.js')}}"></script>
+<link href="{{=URL('static', 'css/stupid.css')}}" rel="stylesheet"/>
+<link href="{{=URL('static', 'css/room.css')}}" rel="stylesheet"/>

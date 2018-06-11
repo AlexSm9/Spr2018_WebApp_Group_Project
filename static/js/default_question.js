@@ -1,6 +1,9 @@
 // This is the js for the default/question.html view.
 // Write separate js for different html pages as needed. -AM
 
+var CHART_WIDTH_AS_PERCENTAGE_OF_WINDOW = 0.4;
+var MAX_CHART_HEIGHT = 200;
+
 var app = function() {
 
     var self = {};
@@ -71,6 +74,17 @@ var app = function() {
                 } 
             }
         );
+    }
+    
+    self.show_poll_data = function(poll_cdw){
+        $("#visualization_div").show();
+        draw_bargraph(poll_cdw);
+        self.vue.showing_data = true;
+    }
+    
+    self.hide_chart_data = function(){
+        $("#visualization_div").hide();
+        self.vue.showing_data = false;
     }
     
             //(%)(%)(%)(%) COOKIE FUNCTIONS (%)(%)(%)(%)
@@ -152,20 +166,24 @@ var app = function() {
             is_cookie: false,
             question: null,
             answers: [],
-            poll_cjso_array: []
+            poll_cjso_array: [],
+            showing_data: false
         },
         methods: {
             get_user_polls: self.get_user_polls,
             
             from_cookie: self.from_cookie,
             add_to_cookie: self.add_to_cookie,
-            delete_cookie: self.delete_cookie
+            delete_cookie: self.delete_cookie,
+            visualize_poll_data: self.show_poll_data,
+            close_visualization: self.hide_chart_data
         }
     });
 
 //    self.get_question();
     self.assign_user_to_all_cookie_saved_polls();
     self.get_user_polls();
+    $("#visualization_div").hide();
     $("#vue-div").show();
 
     return self;
@@ -176,3 +194,7 @@ var APP = null;
 // This will make everything accessible from the js console;
 // for instance, self.x above would be accessible as APP.x
 jQuery(function(){APP = app();});
+
+$("#toggle_chart_viz").click(function(){
+    APP.hide_chart_data();
+});
