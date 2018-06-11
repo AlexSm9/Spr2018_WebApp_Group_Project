@@ -162,8 +162,25 @@ def edit_poll():
 
         
 def reassign_poll_creator():
+    given_polls_dict = request.vars.saved_user_polls_array
+    if not given_polls_dict:
+        return response.json(dict(
+            error="empty_request_variable"
+        ))
+    if not auth.user:
+        return response.json(dict(
+            error="not_signed_in"
+        ))
+    user_email = auth.user.email
+    admin_id_array = given_polls_dict["admin_id_array"]
+    altered_admin_ids_can_be_removed_from_cookie = []
+    for admin_id in admin_id_array:
+        found_poll = get_poll_by_admin_id(admin_id)
+        if not found_poll: continue
+        found_poll.creator = user_email
+        altered_admin_ids_can_be_removed_from_cookie.append(admin_id)
     return response.json(dict(
-        error="API_FUNCTION_NOT_IMPLEMENTED"
+        can_be_removed_from_cookie = altered_admin_ids_can_be_removed_from_cookie
     ))
 
 

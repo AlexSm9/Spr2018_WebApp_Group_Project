@@ -202,6 +202,10 @@ var app = function() {
             function(data){
                 //callback
                 console.log("IN assign_user_to_all_cookie_saved_polls, DATA:", data);
+                recieved_arr = data.can_be_removed_from_cookie;
+                for(var i=0; i<recieved_arr.length;i++){
+                    remove_admin_id_from_user_saved_polls_array_in_cookie(recieved_arr[i]);
+                }
             }
         );
     }
