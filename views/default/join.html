@@ -7,15 +7,26 @@
 </div>
 
 <div class="enter_roomcode">
-   
+
     <p class="title_text">Please enter the room code to proceed</p>
     <div class="join_room">
     	<div class="button_index">
-        <a class="btn rounded" href="question.html" style="vertical-align:middle;"> 
-            <span>Join Room</span>
-        </a>
-    </div>
+    		<input id="joining" type="number"/>
+	        <a id="to_room" class="btn rounded" style="vertical-align:middle;"> 
+	            <span>Join Room</span>
+	        </a>
+    	</div>
     </div>
 
 </div>
-</div>
+
+<script>
+	console.log("Script working");
+	$("#to_room").click(function() {
+		console.log("clicked");
+		var next_id = $("#joining").val();
+		var foo = "./room?id=" + next_id;
+		console.log(foo);
+		window.location.replace(foo);
+	});
+</script>
