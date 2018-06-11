@@ -241,6 +241,9 @@ var app = function() {
         else if(page_string == "poll_closed"){
                   
         }
+        else if(page_string == "poll_not_open"){
+                  
+        }
         else if(page_string == "view_results"){
             
         }
@@ -256,7 +259,14 @@ var app = function() {
     
     function process_error(data){
         if(data.error != null){
-            console.log("Encountered API Error:", data.error);
+            if(data.error == "poll_closed"){
+                self.handle_page_change(data.error);
+            }else if(data.error == "poll_not_open"){
+                self.handle_page_change(data.error);
+            }
+            else{
+                console.log("Encountered API Error:", data.error);
+            }
             return true;
         }
         return false;
