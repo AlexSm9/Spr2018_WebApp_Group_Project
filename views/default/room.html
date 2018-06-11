@@ -12,6 +12,8 @@
     var edit_poll_admin_api_url = "{{=URL('api', 'edit_poll')}}";
     var toggle_answer_accept_admin_api_url = "{{=URL('api', 'toggle_accepting_answers')}}";
     
+    var get_public_results_api_url = "{{=URL('api', 'answerer_get_poll_results')}}";
+    
     var assign_user_to_all_cookie_saved_polls_api_url = "{{=URL('api', 'reassign_poll_creator')}}";
     
     
@@ -38,9 +40,7 @@
         <div class="button_container">
         <button class="btn togglebutton rounded" id="toggle_QR_viz" style="background-color: #a0522d; height: 50px; width:200px; font-size: 110%;">Hide/Show QR Code</button>
         </div>
-        <div class="button_container center">
-            <button class="btn rounded" onclick="#" style="background-color: #a0522d; height: 50px; width:200px; font-size: 110%;">Close Poll</button>
-        </div>
+
     </div>
     <div id="vue-div">
         <div v-if="page=='poll_create'">
@@ -76,6 +76,9 @@
 
         <div v-if="page=='poll_admin'">
             <div class="question_page center">
+            <div class="button_container center">
+                <button class="btn rounded" onclick="poll_toggle_open_status(false)" style="background-color: #a0522d; height: 50px; width:200px; font-size: 110%;">Close Poll</button>
+            </div>
             <p>Poll Admin Page</p>
             <button v-on:click="delete_poll()">Delete newly created poll? (temporary button)</button>
             <!--<p>Not required unless to test poll closure</p>            

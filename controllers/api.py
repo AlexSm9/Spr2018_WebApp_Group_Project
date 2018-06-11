@@ -151,7 +151,7 @@ def get_poll():
 
 def answerer_get_poll_results():
     try:
-        record = answerer_get_poll_record()
+        record = answerer_get_poll_record(True)
         if record.__class__ is SubFunctionError: return response.json(record.get_error_dict())
         cjso = get_poll_cjso(record)
         return response.json(dict(
@@ -226,15 +226,17 @@ def get_logged_in_user_polls():
 
 #------ Answerer Functions ------
 
-def answerer_get_poll_record():
+def answerer_get_poll_record(ignore_closed=False):
     request_poll_id = request.vars.poll_id
     if request_poll_id is None:
         return SubFunctionError("id_not_provided")
     record = get_poll_by_poll_id(request_poll_id)
+    print("answerer get poll record:", request_poll_id)
+    print(record)
     if record is None:
         #No Poll With This ID Exists
         return SubFunctionError("poll_not_found")
-    if record.accepting_answers is False:
+    if record.accepting_answers is False and not ignore_closed:
         poll_response_count = get_poll_cjso(record).get_response_count()
         if poll_response_count <= 0:
             return SubFunctionError("poll_not_open")
@@ -262,6 +264,7 @@ def send_choice():
             error="missing_option_id"
         ))
     record = answerer_get_poll_record()
+    if record.__class__ is SubFunctionError: return response.json(record.get_error_dict())
     cjso = get_poll_cjso(record)
     cjso.increment_option_count(option_id)
     save_poll_cjso(record, cjso)

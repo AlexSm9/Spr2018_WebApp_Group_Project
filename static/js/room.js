@@ -213,7 +213,12 @@ var app = function() {
     self.handle_page_change = function(page_string){
 //        $("#visualization_div").hide()
         self.vue.page = page_string;
+        console.log("Changed to subpage:", page_string);
         clearInterval(self.refreshinterval);
+        
+        $("#toggle_chart_viz").show();
+        $("#visualization_div").hide();
+        
         if(page_string == "poll_create"){
             //do stuff
         } 
@@ -242,10 +247,13 @@ var app = function() {
                   
         }
         else if(page_string == "poll_not_open"){
-                  
+            self.handle_page_change("view_results");      
         }
         else if(page_string == "view_results"){
-            
+            //TODO: REFRESH CHART USING USER DATA
+            self.refresh_chart_data_answerer();
+            $("#visualization_div").show();
+            $("#toggle_chart_viz").hide();
         }
         else if(page_string == "view_results_admin"){
             
@@ -259,6 +267,7 @@ var app = function() {
     
     function process_error(data){
         if(data.error != null){
+            console.log("Handling error, error is:", data.error);
             if(data.error == "poll_closed"){
                 self.handle_page_change(data.error);
             }else if(data.error == "poll_not_open"){
@@ -327,6 +336,23 @@ var app = function() {
         );
     };
     
+    self.get_public_poll_results = function(callbackfunction=null){
+        var parameters = {
+            poll_id: self.vue.room_id
+        };
+        $.post(get_public_results_api_url,
+            parameters,
+            function(data){
+                //callback
+                //really this just holds a returned CDW object 
+                console.log("Public Poll Data:", data)
+                self.vue.poll_data_admin_data_object = new ChartDataWrapper(data.poll_json);
+                if(callbackfunction){
+                    callbackfunction();
+                }
+            }
+        );
+    };
     
     //poll creator function
     
@@ -397,6 +423,11 @@ var app = function() {
     self.refresh_chart_data_admin = function(){
         var cb = function(){draw_bargraph(self.vue.poll_data_admin_data_object)};
         self.get_poll(cb);
+    }
+    
+    self.refresh_chart_data_answerer = function(){
+        var cb = function(){draw_bargraph(self.vue.poll_data_admin_data_object)};
+        self.get_public_poll_results(cb);
     }
 
     self.edit_poll = function(){
