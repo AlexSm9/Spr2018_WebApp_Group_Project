@@ -276,6 +276,7 @@ def undo_choice():
             error="missing_option_id"
         ))
     record = answerer_get_poll_record()
+    if record.__class__ is SubFunctionError: return response.json(record.get_error_dict())
     cjso = get_poll_cjso(record)
     cjso.decrement_option_count(option_id)
     save_poll_cjso(record, cjso)

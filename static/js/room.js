@@ -218,6 +218,8 @@ var app = function() {
         
         $("#toggle_chart_viz").show();
         $("#visualization_div").hide();
+        $("#enter_room_container").hide();
+        $(".button_container").hide();
         
         if(page_string == "poll_create"){
             //do stuff
@@ -229,7 +231,7 @@ var app = function() {
             $("#room_id_div").attr("href", str_url);
             $("#room_id_number").text(self.vue.room_id)
             $("#visualization_div").show()
-            
+            $(".button_container").show();
             self.refresh_chart_data_admin();
             self.refreshinterval = setInterval(self.refresh_chart_data_admin, 500);
             add_admin_id_to_user_saved_polls_array_in_cookie(self.vue.admin_id);
@@ -244,10 +246,9 @@ var app = function() {
                   
         }
         else if(page_string == "poll_closed"){
-                  
+            self.handle_page_change("view_results");            
         }
         else if(page_string == "poll_not_open"){
-            self.handle_page_change("view_results");      
         }
         else if(page_string == "view_results"){
             //TODO: REFRESH CHART USING USER DATA
@@ -256,7 +257,8 @@ var app = function() {
             $("#toggle_chart_viz").hide();
         }
         else if(page_string == "view_results_admin"){
-            
+            self.refresh_chart_data_admin();
+            $("#visualization_div").show();
         }
         else{
             throw EvalError("Unknown page string:", page_string)
@@ -403,6 +405,16 @@ var app = function() {
             }
         );
     };
+    
+    self.close_poll = function(){
+        self.toggle_accepting_answers(false);
+        self.handle_page_change("view_results_admin");
+    }
+    
+    self.reopen_poll = function(){
+        self.toggle_accepting_answers(true);
+        self.handle_page_change("poll_admin");
+    }
     
     self.get_poll = function(callbackfunction=null){
         var parameters = {
@@ -568,6 +580,7 @@ var app = function() {
             create_remove_choice: self.remove_choice_from_choice_array,
             create_poll: self.create_new_poll,
             delete_poll: self.delete_poll_by_current_admin_id,
+            close_poll: self.close_poll,
             poll_send_choice: self.send_choice,
             poll_undo_choice: self.undo_choice,
             poll_toggle_open_status: self.toggle_accepting_answers,
