@@ -13,21 +13,7 @@ div.button_index .btn{
     font-size: 30px;
     background-color: #a0522d; 
     color: white;
-    cursor: pointer;
-    border-radius: 15px;
-
 }
-
-div.button_index .btn:hover {background-color: #DEBE8E;}
-
-div.button_index .btn:active {
-  background-color: #3e8e41;
-  box-shadow: 0 5px #666;
-  color: white;
-  transform: translateY(4px);
-}
-
-
 
 div.footer {
   padding-top: 5rem;
@@ -86,16 +72,21 @@ div.header_image{
 }
 
 .button {
-  padding: 15px 25px;
-  font-size: 24px;
-  cursor: pointer;
-  text-align: center;
-  text-decoration: none;
-  outline: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: navy;
   border: none;
-  border-radius: 15px;
-  color:white;
-  background-color: #a0522d;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 28px;
+  padding: 20px;
+  width: 200px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+  height:150px;
+  margin-top: 3s0px;
+  background-color: #4C8961; 
 }
 
 .button span {
@@ -115,7 +106,7 @@ div.header_image{
 }
 
 .button:hover span {
-  background-color: #3e8e41
+  padding-right: 25px;
 }
 
 .button:hover span:after {
@@ -128,7 +119,7 @@ div.header_image{
 /* multiple files */
 
 p.prompt_text {
-    font-size: 8vw;
+    font-size: 300%;
     text-align: center;
     font-family: Verdana, Geneva, sans-serif;
     font-weight: bold;
@@ -149,7 +140,7 @@ p.title_text {
 .input {
   position:relative;
   font-size: 3em;
-  background: linear-gradient(21deg, brown, black);
+  background: linear-gradient(21deg, #4C8961, brown);
   padding: 5px;
   display: inline-block;
   border-radius: 9999em;

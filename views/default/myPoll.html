@@ -3,37 +3,33 @@
 {{block head}}
 <script src="{{=URL('static', 'js/vue.js')}}"></script>
 <script>
-  var get_question_url = "{{=URL('api', 'get_question')}}";
-
+	var get_question_url = "{{=URL('api', 'get_question')}}";
 </script>
 {{end}}
 
-<div class="background_color" style="background-color: #F8EBE3; height:400px;">
-
-
 <div class="enter_roomcode">
-	    <div id="vue-div" class="display:none">
-
-  <p class="title_text">My Polls</p>
-
-  <div  style="margin-left: 200px; margin-right: 200px;  border: 2px solid black;">
-    <div class="container padded">
-			<div class="half polls compressible">
-				<div class="question center" style="font-weight: bold; font-size: 100%;margin-top:20px; margin-bottom: 5px;">${question}
+	<div id="vue-div" class="display:none">
+		<p class="prompt_text">My Polls</p>
+		<div style="margin-left: 200px; margin-right: 200px;  border: 2px solid black;">
+			<div class="container padded">
+				<div class="half polls compressible">
+					<div class="question center" style="font-weight: bold; font-size: 100%; margin-top:0; margin-bottom: 5px;">
+						<p class="title_text" style="margin-top: 0; margin-bottom: 0;">Poll Question</p>
+					</div>
 				</div>
-			</div>
-			<div class="half button_list compressible" style="float:right;margin-top: 20px;">
-				<div class="buttons" style="margin-left: 30%;" > 
-					<div class = "btn rounded" style="padding: 10px;">
-						<i class="fa fa-heart"></i>
-					</div>	
-					<div class="btn rounded" style="padding: 10px;">	
-						<i class="fa fa-trash-o" ></i>
+				<div class="quarter compressible"></div>
+				<div class="quarter button_list compressible">
+					<div class="buttons" style="margin-left: 30%; margin-top: 20px;"> 
+						<div class = "btn rounded" style="padding: 10px;">
+							<i class="fa fa-heart"></i>
+						</div>	
+						<div class="btn rounded" style="padding: 10px;">	
+							<i class="fa fa-trash-o"></i>
+						</div>
 					</div>
 				</div>
 			</div>
-  	</div>
-	</div>	
+		</div>	
 	</div>
 </div>
 

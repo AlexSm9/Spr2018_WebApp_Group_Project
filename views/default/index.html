@@ -1,6 +1,5 @@
 {{extend 'layout.html'}}
 
-<div class="background_color" style="background-color: #F8EBE3; height:600px;">
 
 <div class="main_content">
     <!-- Your code goes here.  Remember to call $("#vue-div").show() once you get the data for the first time. -->
@@ -14,19 +13,18 @@
         </div>
 
        <div class="container padded" style="margin-top: 50px; margin-bottom: 20px;">
-            <div class=" button_index">
+            <div class=" half button_index compressible">
                 <a class="btn rounded" href="{{=URL('default', 'create')}}">Create Question</a>
             </div>
 
-            <div class="button_index">
+            <div class="half button_index compressible">
                 <a class="btn rounded" href="{{=URL('default', 'join')}}">Answer Question</a>
-            </div>
-
-            <div class="button_index">
-                <a class="btn rounded" href="{{=URL('default', 'myPoll')}}">Profile</a>
             </div>
         </div>
 
+        <div class="button_index">
+            <a class="btn rounded" href="{{=URL('default', 'myPoll')}}" style="background-color: #4286f4;">Profile</a>
+        </div>
         <!--
         <div class="button_error1">
             <a class="btn blue" href="{{=URL('default', 'error1')}}">Error Page1</a>
@@ -39,6 +37,5 @@
 
     </div>
 
-</div>
 </div>
 

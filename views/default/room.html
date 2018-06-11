@@ -1,5 +1,4 @@
 {{extend 'layout.html'}}
-<div class="background_color" style="background-color: #F8EBE3; ">
 
 <script>
     var get_poll_choices_api_url = "{{=URL('api', 'get_choices')}}";
@@ -14,11 +13,12 @@
     
 </script>
 
+
 <body>
     <div id="visualization_div" style="display:none">
         <h2 id="chart_main_title"></h2>
         <div class="button_container">
-            <button class="btn togglebutton rounded" id="toggle_chart_viz" style="    background-color: #a0522d; height: 50px; width:200px; font-size: 130%;">Hide/Show Chart</button>
+            <button class="btn large togglebutton" id="toggle_chart_viz">Hide/Show Chart</button>
         </div>
         <div id="chart_container">
             <svg id="chart_main" style="padding-bottom:150;box-sizing: content-box"></svg>
@@ -26,79 +26,57 @@
         </div>
         <div id="enter_room_container" style="display:none">
             <a id="room_id_div">
-                <div class="center">
-                    <span>Room ID: </span><span id="room_id_number"></span>
-                </div>
+                <span>Room ID: </span><span id="room_id_number"></span>
             </a>
             <div id="room_QR"></div>
         </div>
         <div class="button_container">
-        <button class="btn togglebutton rounded" id="toggle_QR_viz" style="background-color: #a0522d; height: 50px; width:200px; font-size: 110%;">Hide/Show QR Code</button>
+        <button class="btn large togglebutton" id="toggle_QR_viz">Hide/Show QR Code</button>
         </div>
-        <div class="button_container center">
-            <button class="btn rounded" onclick="#" style="background-color: #a0522d; height: 50px; width:200px; font-size: 110%;">Close Poll</button>
+        <div class="button_container">
+            <button class="btn large" onclick="#">Close Poll</button>
         </div>
     </div>
     <div id="vue-div">
         <div v-if="page=='poll_create'">
-            <div class="question_page center">
-                <h3 style="margin-top: 50px;">Question</h3>
-                <div class="question_bar half" style="margin-left: 470px;">
-                    <span class="input">
-                        <input type="text" v-model="poll_question">
-                    </span>
+            <h3>Question</h3>
+            <input type="text" v-model="poll_question">
+            <h3>Choices</h3>
+            <div class="choices" v-for="(item, index) in poll_create_choices">
+                <div>
+                    <p>Choice: ${item.text}</p>
+                    <a class="btn rounded red small" v-on:click="create_remove_choice(index)">
+                        <i class="fa fa-trash fa-lg"></i>
+                    </a>
                 </div>
-                <h3 style="margin-top: 70px;">Choices</h3>
-                <div class="choices" v-for="(item, index) in poll_create_choices">
-                    <div class="question_page center">
-                        <h6>${index+1}.${item.text} 
-                            <a class="btn rounded black small" v-on:click="create_remove_choice(index)">
-                                <i class="fa fa-trash fa-lg"></i>
-                            </a>
-                        </h6>
-                    </div>
-                </div>
-                <div class="question_bar half" style="margin-left: 470px; margin-bottom: 50px;" >
-                    <span class="input">
-                        <input type="text" v-model="choice_create_text">
-                    </span>
-                </div>
-                <a class="btn rounded" v-on:click="create_add_choice()" style="background-color: #a0522d; height:35px; width:100px;">Add Choice</a>
-
             </div>
-            <div class="dcsfdf center" style="margin-top: 30px;">
-                <a class="btn rounded" v-on:click="create_poll" style="background-color: #a0522d; height:35px; width:100px;">Create Poll</a>
-            </div>
+            <input type="text" v-model="choice_create_text">
+            <button v-on:click="create_add_choice()">Create Choice</button>
+            <button v-on:click="create_poll">Create Poll</button>
         </div>
-
         <div v-if="page=='poll_admin'">
-            <div class="question_page center">
             <p>Poll Admin Page</p>
             <button v-on:click="delete_poll()">Delete newly created poll? (temporary button)</button>
             <!--<p>Not required unless to test poll closure</p>            
             <button v-on:click="poll_toggle_open_status()">Toggle Poll Open Status (Default Closed)</button>
             --> 
-            </div>
         </div>
 
 
 
         <div v-if="page=='poll_answer'">
-            <div class="question_page center">
-                <div class="question">
-                    <p class="title_text" style="font-weight: normal; font-size: 200%; margin-bottom: 50px;">${poll_question}</p>
-                    <div>
-                        <div v-for="choice in poll_answer_choices">
-                            <div class="btnn center" v-on:click="poll_send_choice(choice)" style="width: 200px; margin-bottom: 20px;">
-                                <span>${choice.text}</span>
-                            </div>
+            <div class="question">
+                <p class="title_text" style="font-weight: normal; font-size: 200%; margin-bottom: 50px;">${poll_question}</p>
+                <div>
+                    <div v-for="choice in poll_answer_choices">
+                        <div class="btnn center" v-on:click="poll_send_choice(choice)" style="width: 200px; margin-bottom: 20px;">
+                            <span>${choice.text}</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div v-if="page=='poll_answer_confirmed'">
-            <div class="question_page center">
             <div class="question">
                 <p class="title_text" style="font-weight: normal; font-size: 200%; margin-bottom: 20px;">Enter Question Here</p>
                 <div>
@@ -109,12 +87,10 @@
                 </div>
             </div>
         </div>
-    </div>
 
     </div>
 
 </body>
-</div>
 
 <!--These are for ease of testing with brackets.-->
 <link href="{{=URL('static', 'css/stupid.css')}}" rel="stylesheet"/>
