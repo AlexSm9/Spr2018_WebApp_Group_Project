@@ -39,7 +39,7 @@
       <div  style="margin-left: 200px; margin-right: 200px;  border: 2px solid black;">
 
             <div class="container padded">
-                <div class="twoquarters polls compressible">
+                <div class="half polls compressible">
                     <div v-for="(item, index) in poll_cjso_array">
                         <div v-on:click="visualize_poll_data(item)">
                             <div class="question center" style="font-weight: bold; font-size: 200%;">${item.question}</div>
@@ -47,14 +47,12 @@
                     </div>
                 </div>
                 <div class="half button_list compressible" style="float:right;margin-top: 20px;">
-    <!--                 <div class="buttons" style="margin-left: 30%;" > 
-                        <div class = "btn rounded" style="padding: 10px;">
-                            <i class="fa fa-heart"></i>
-                        </div>  
-                        <div class="btn rounded" style="padding: 10px;">    
-                            <i class="fa fa-trash-o" ></i>
-                        </div>
-                    </div> -->
+                    <div class="quarter button_list compressible" style="float:right;margin-top: 40px;">
+                        <p>js</p>
+                    </div>
+                    <div class="quarter button_list compressible" style="float:right;margin-top: 40px;margin-right:30px;size: 120%;">
+                        <p>Responses:</p>
+                    </div>
                 </div>
             </div>
         </div> 
