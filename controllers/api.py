@@ -235,7 +235,11 @@ def answerer_get_poll_record():
         #No Poll With This ID Exists
         return SubFunctionError("poll_not_found")
     if record.accepting_answers is False:
-        return SubFunctionError("poll_closed")
+        poll_response_count = get_poll_cjso(record).get_response_count()
+        if poll_response_count <= 0:
+            return SubFunctionError("poll_not_open")
+        else:
+            return SubFunctionError("poll_closed")
     return record
 
 
