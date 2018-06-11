@@ -28,8 +28,11 @@ var app = function() {
 //    };
     
     self.assign_user_to_all_cookie_saved_polls = function(){
+        var saved_polls = self.from_cookie("saved_user_polls_array");
+        console.log("saved_polls", saved_polls);
+        if(saved_polls===null){return;}
         var parameters = {
-            saved_user_polls_array: self.from_cookie("saved_user_polls_array")
+            saved_user_polls_array: JSON.stringify(saved_polls)
         };
         $.post(assign_user_to_all_cookie_saved_polls_api_url,
             parameters,
