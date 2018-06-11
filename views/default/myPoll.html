@@ -4,6 +4,9 @@
 <script src="{{=URL('static', 'js/vue.js')}}"></script>
 <script>
   var get_question_url = "{{=URL('api', 'get_question')}}";
+    
+    var assign_cookie_to_profile = "{{=URL('api', 'reassign_poll_creator')}}";
+    var get_user_polls_api_url = "{{=URL('api', 'get_logged_in_user_polls')}}";
 
 </script>
 {{end}}
