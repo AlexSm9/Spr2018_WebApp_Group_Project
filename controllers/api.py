@@ -185,7 +185,7 @@ def edit_poll():
 
 @auth.requires_login()        
 def reassign_poll_creator():
-    given_polls_dict = request.vars.saved_user_polls_array
+    given_polls_dict = json.loads(request.vars.saved_user_polls_array)
     if not given_polls_dict:
         return response.json(dict(
             error="empty_request_variable"

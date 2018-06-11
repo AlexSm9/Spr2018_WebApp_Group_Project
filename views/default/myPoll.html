@@ -5,7 +5,7 @@
 <script>
   var get_question_url = "{{=URL('api', 'get_question')}}";
     
-    var assign_cookie_to_profile = "{{=URL('api', 'reassign_poll_creator')}}";
+    var assign_user_to_all_cookie_saved_polls_api_url = "{{=URL('api', 'reassign_poll_creator')}}";
     var get_user_polls_api_url = "{{=URL('api', 'get_logged_in_user_polls')}}";
 
 </script>
@@ -13,10 +13,11 @@
 
 <div class="background_color" style="background-color: #F8EBE3; height:400px;">
 
+<p class="title_text">My Polls</p>
+
 
 <div class="enter_roomcode">
     <div id="vue-div">
-        <p class="title_text">My Polls</p>
         <div v-for="(item, index) in poll_cjso_array">
             <p>${item.question}</p>        
         </div>

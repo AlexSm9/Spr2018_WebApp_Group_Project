@@ -59,7 +59,7 @@ var app = function() {
     
     self.get_user_polls = function(){
         var parameters = {};
-        $.post(assign_user_to_all_cookie_saved_polls_api_url,
+        $.post(get_user_polls_api_url,
             parameters,
             function(data){
                 //callback
@@ -164,7 +164,8 @@ var app = function() {
     });
 
 //    self.get_question();
-    //self.assign_user_to_all_cookie_saved_polls();
+    self.assign_user_to_all_cookie_saved_polls();
+    self.get_user_polls();
     $("#vue-div").show();
 
     return self;
