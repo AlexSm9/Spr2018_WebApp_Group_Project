@@ -37,7 +37,12 @@ var app = function() {
         }
         console.log("saved_polls", saved_polls);
         if(saved_polls===null){return;}
-        if(saved_polls["admin_id_array"].length<=0){return;}
+        try{
+            if(saved_polls["admin_id_array"].length<=0){return;}
+        }
+        catch(chrome_err){
+            return;
+        }
         var parameters = {
             saved_user_polls_array: JSON.stringify(saved_polls)
         };
