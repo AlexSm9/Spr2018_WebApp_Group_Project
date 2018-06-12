@@ -74,6 +74,7 @@ main{
     display: block;
     margin: 0 auto;
     width: 30%;
+    text-align: center;
 }
 
 #enter_room_container {
