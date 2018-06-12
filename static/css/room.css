@@ -73,7 +73,7 @@ main{
 .togglebutton{
     display: block;
     margin: 0 auto;
-    width: 30%;
+    width: 200px;
     text-align: center;
 }
 

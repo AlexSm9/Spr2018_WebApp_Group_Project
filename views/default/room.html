@@ -92,14 +92,14 @@
         <div v-if="page=='poll_not_open'">
             <p class="prompt_text" style="font-size:60px; padding-top: 2%">This Poll is Currently Not Open</p>
             <p class="title_text" style="margin-bottom: 50px;">Please reload the page when the poll opens.</p>
-            <button class="btn togglebutton large red" onclick="location.reload()">Reload Page</button>
+            <button class="btn togglebutton large red rounded" onclick="location.reload()">Reload Page</button>
         </div>
         
         <div v-if="page=='view_results_admin'">
-            <button class="btn rounded large red togglebutton" v-on:click="go_home()">Create or answer a new poll.</button>
+            <button class="btn rounded large red togglebutton" v-on:click="go_home()" style="width:250px">Create or answer a new poll.</button>
         </div>
         <div v-if="page=='view_results'">
-            <button class="btn rounded large red togglebutton" v-on:click="go_home()">Create or answer a new poll.</button>
+            <button class="btn rounded large red togglebutton" v-on:click="go_home()" style="width:250px">Create or answer a new poll.</button>
         </div>
 
         <div v-if="page=='poll_answer'">
@@ -114,7 +114,7 @@
                         </div>
                     </div>
                 </div>
-                <button onclick="location.reload()" class="btn rounded red togglebutton large" style="width:20%;margin-top: 50px;">Reload Page</button>
+                <button onclick="location.reload()" class="btn rounded red togglebutton large" style="margin-top: 50px;">Reload Page</button>
             </div>
         </div>
         <div v-if="page=='poll_answer_confirmed'">
@@ -126,7 +126,7 @@
                     <div class="btnn center" v-on:click="poll_undo_choice(chosen_poll_choice)" style="width: 200px; margin-bottom: 20px;">
                             <span>Undo Choice</span>
                     </div>
-                    <button onclick="location.reload()" class="btn rounded red togglebutton large" style="width:20%;margin-top: 50px;">Reload Page</button>
+                    <button onclick="location.reload()" class="btn rounded red togglebutton large" style="margin-top: 50px;">Reload Page</button>
                 </div>
             </div>
         </div>
