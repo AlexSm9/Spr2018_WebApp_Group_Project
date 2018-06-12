@@ -108,7 +108,13 @@ var app = function() {
             admin_id_cookie_dict = self.from_cookie("current_room_admin_id");
         }
         if(admin_id_cookie_dict===null){return null;}
-        var id_from_cookie = admin_id_cookie_dict["a_id"];
+        var id_from_cookie = null;
+        try{
+            id_from_cookie = admin_id_cookie_dict["a_id"];
+        }catch(chrome_error){
+            return null;
+        }
+        if(id_from_cookie ===null){return null;}
         console.log("Retrieved room admin id:", id_from_cookie);
         return id_from_cookie
     }
