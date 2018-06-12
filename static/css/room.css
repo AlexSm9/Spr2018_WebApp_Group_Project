@@ -14,10 +14,12 @@ h1{
 
 #chart_main {
     display: flex;
+    padding-left: 4%;
 }
 
 #chart_main_title {
     text-align: center;
+    padding-top: 20px;
 }
 
 .chart_onbar_value {
@@ -45,6 +47,35 @@ h1{
     margin: auto;
 }
 
+
+
+.label_input_div{
+    padding-top: 20px;
+    align-content: center;
+}
+.label_input_div h3{
+    text-align: center;
+}
+.label_input_div input{
+    margin: 20px 0px 20px !important;
+}
+
+main{
+    padding-bottom: 50px;
+    background-color: #F8EBE3 !important;
+}
+
 .button_container{
+    margin: 0 auto;
     padding: 4px;
+}
+
+.togglebutton{
+    display: block;
+    margin: 0 auto;
+    width: 30%;
+}
+
+#enter_room_container {
+    padding-top: 15px;
 }

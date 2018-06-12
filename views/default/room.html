@@ -38,46 +38,50 @@
             <div id="room_QR"></div>
         </div>
         <div class="button_container">
-        <button class="btn togglebutton rounded" id="toggle_QR_viz" style="background-color: #a0522d; height: 50px; width:200px; font-size: 110%;">Hide/Show QR Code</button>
+        <button class="btn togglebutton center rounded" id="toggle_QR_viz" style="background-color: #a0522d; height: 50px; width:200px; font-size: 110%;">Hide/Show QR</button>
         </div>
 
     </div>
     <div id="vue-div">
         <div v-if="page=='poll_create'">
             <div class="question_page center">
-                <h3 style="margin-top: 50px;">Question</h3>
-                <div class="question_bar half">
-                    <span class="input">
-                        <input type="text" v-model="poll_question">
-                    </span>
-                </div>
-                <h3 style="margin-top: 70px;">Choices</h3>
-                <div class="choices" v-for="(item, index) in poll_create_choices">
-                    <div class="question_page center">
-                        <h6>${index+1}. ${item.text} 
-                            <a class="btn rounded black small" v-on:click="create_remove_choice(index)">
-                                <i class="fa fa-trash fa-lg"></i>
-                            </a>
-                        </h6>
+                <div class="label_input_div">
+                    <h3>Question</h3>
+                    <div class="question_bar half">
+                        <span class="input">
+                            <input type="text" v-model="poll_question">
+                        </span>
                     </div>
                 </div>
-                <div class="question_bar half" style="margin-bottom: 50px;" >
-                    <span class="input">
-                        <input type="text" v-model="choice_create_text">
-                    </span>
+                <div class="label_input_div">
+                    <h3>Choices</h3>
+                    <div class="choices" v-for="(item, index) in poll_create_choices">
+                        <div class="question_page center">
+                            <h6>${index+1}. ${item.text} 
+                                <a class="btn rounded black small" v-on:click="create_remove_choice(index)">
+                                    <i class="fa fa-trash fa-lg"></i>
+                                </a>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="question_bar half">
+                        <span class="input">
+                            <input type="text" v-model="choice_create_text">
+                        </span>
+                    </div>
                 </div>
-                <a class="btn rounded" v-on:click="create_add_choice()" style="background-color: #a0522d; height:35px; width:100px;">Add Choice</a>
+                <button class="btn rounded" v-on:click="create_add_choice()" style="background-color: #a0522d; height:35px; width:100px;">Add Choice</button>
 
             </div>
             <div class="dcsfdf center" style="margin-top: 30px;">
-                <a class="btn rounded" v-on:click="create_poll" style="background-color: #a0522d; height:35px; width:100px;">Create Poll</a>
+                <button class="btn large rounded" v-on:click="create_poll" style="background-color: #a0522d;">Create Poll</button>
             </div>
         </div>
 
         <div v-if="page=='poll_admin'">
             <div class="question_page center">
             <div class="button_container center">
-                <button class="btn rounded" v-on:click="close_poll()" style="background-color: #a0522d; height: 50px; width:200px; font-size: 110%;">Close Poll</button>
+                <button class="btn togglebutton rounded" v-on:click="close_poll()" style="background-color: #cc2012; height: 50px; width:150px; font-size: 110%; margin-top: 50px">Close Poll</button>
             </div>
             <!--<p>Not required unless to test poll closure</p>            
             <button v-on:click="poll_toggle_open_status()">Toggle Poll Open Status (Default Closed)</button>
@@ -92,10 +96,10 @@
         </div>
         
         <div v-if="page=='view_results_admin'">
-            <button class="btn large red" v-on:click="go_home()">Create or answer a new poll.</button>
+            <button class="btn rounded large red togglebutton" v-on:click="go_home()">Create or answer a new poll.</button>
         </div>
         <div v-if="page=='view_results'">
-            <button class="btn large red" v-on:click="go_home()">Create or answer a new poll.</button>
+            <button class="btn rounded large red togglebutton" v-on:click="go_home()">Create or answer a new poll.</button>
         </div>
 
         <div v-if="page=='poll_answer'">
