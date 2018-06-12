@@ -28,9 +28,16 @@ var app = function() {
 //    };
     
     self.assign_user_to_all_cookie_saved_polls = function(){
-        var saved_polls = self.from_cookie("saved_user_polls_array");
+        var saved_polls;
+        try{
+            saved_polls = JSON.parse(self.from_cookie("saved_user_polls_array"));
+        }
+        catch(some_error){
+            saved_polls = self.from_cookie("saved_user_polls_array");
+        }
         console.log("saved_polls", saved_polls);
         if(saved_polls===null){return;}
+        if(saved_polls["admin_id_array"].length<=0){return;}
         var parameters = {
             saved_user_polls_array: JSON.stringify(saved_polls)
         };
