@@ -251,6 +251,9 @@ var app = function() {
         else if(page_string == "poll_not_open"){
             console.log("in page_string_poll_not_open, vue page is", self.vue.page);
         }
+        else if(page_string == "poll_not_found"){
+            self.handle_page_change("poll_not_open");                 
+        }
         else if(page_string == "view_results"){
             //TODO: REFRESH CHART USING USER DATA
             self.refresh_chart_data_answerer();
@@ -274,6 +277,8 @@ var app = function() {
             if(data.error == "poll_closed"){
                 self.handle_page_change(data.error);
             }else if(data.error == "poll_not_open"){
+                self.handle_page_change(data.error);
+            }else if(data.error == "poll_not_found"){
                 self.handle_page_change(data.error);
             }
             else{
