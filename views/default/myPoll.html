@@ -3,20 +3,17 @@
 {{block head}}
 <script src="{{=URL('static', 'js/vue.js')}}"></script>
 <script>
-  var get_question_url = "{{=URL('api', 'get_question')}}";
-    
+    var get_question_url = "{{=URL('api', 'get_question')}}";
     var assign_user_to_all_cookie_saved_polls_api_url = "{{=URL('api', 'reassign_poll_creator')}}";
     var get_user_polls_api_url = "{{=URL('api', 'get_logged_in_user_polls')}}";
-
 </script>
 {{end}}
 
 <div class="background_color" style="background-color: #F8EBE3; padding-bottom: 500px;">
 
 {{if auth.user is not None:}}
-    
-    
-<p class="title_text">My Polls</p>
+
+<p class="title_text" style="text-align: center; padding-top: 2%;">My Polls</p>
 
 <div id="visualization_div">
     <h2 id="chart_main_title"></h2>
@@ -24,10 +21,10 @@
         <svg id="chart_main" style="padding-bottom:150;box-sizing: content-box"></svg>
         <!--box-sizing: content-box style is there because stupid.css wants to overwrite it with something else by default-->
     </div>
-    <button class="btn togglebutton rounded" id="toggle_chart_viz" style="    background-color: #a0522d; height: 50px; width:200px; font-size: 130%;">Hide/Show Chart</button>
-
+    <button class="btn togglebutton rounded" id="toggle_chart_viz" style="background-color: #a0522d; height: 50px; width:200px; font-size: 130%;">
+        Hide/Show Chart
+    </button>
 </div>
-
 
 <div class="enter_roomcode">
     <div id="vue-div">
@@ -36,33 +33,39 @@
                 <p>${item.question}</p>
             </div>
         </div> -->
-    <div v-for="(item, index) in poll_cjso_array">
+        <div v-for="(item, index) in poll_cjso_array">
 
-      <div class="border_profile" style="margin-left: 100px; margin-right: 100px;  border: 2px solid black;">
+            <div class="border_profile rounded" style="margin-left: 100px; margin-right: 50px;  border: 5px solid black; padding-bottom: 5px;">
+                <div class="container padded">
+                    <div class="threequarters polls compressible">
 
-            <div class="container padded">
-                <div class="half polls compressible">
                         <div v-on:click="visualize_poll_data(item)">
-                            <div class="question center" style="font-weight: bold; font-size: 200%;">${item.question}</div>
+                            <div class="question center" style="font-weight: bold; font-size: 75%;">${item.question}</div>
                         </div>
-                </div>
-                <div class="half button_list compressible" style="float:right;">
-                    <div class="button_list" style="float:right;margin-right:80px;font-size: 100%;">
+
+                    </div>
+                    <div class="quarter button_list compressible" style="float:right;">
+
+                        <div class="button_list" style="float:right;margin-right:80px;font-size: 30%;">
                             <p style="margin-top: 30px;">Response Count: ${item.metadata.response_count}</p>
+                        </div>
+
                     </div>
                 </div>
             </div>
-        </div> 
+
+        </div>
     </div>
-</div>
 </div>
     
 {{else:}}
-<h3>Please log in to see your polls.</h3>
+<p class="title_text" style="text-align: center; padding-top: 2%;">Please log in to see your polls.</p>
 {{pass}}
 
-
-            
+<a class="btn rounded" href="{{=URL('default','index')}}" style="background-color: #a0522d; height: 50px; width:200px; font-size: 130%;">
+    Back to Index
+</a>
+          
 <!--
   <div  style="margin-left: 200px; margin-right: 200px;  border: 2px solid black;">
     <div class="container padded">

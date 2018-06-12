@@ -156,6 +156,8 @@ p.title_text {
   size: 300%;*/
 }
 
+input:not([type]), input:not([type=checkbox]):not([type=radio]):not([type=button]):not([type=submit]), [type=file]:before { width: 50%; }
+
 #top, #bottom, #left, #right {
   position: fixed;
 }
